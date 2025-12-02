@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>成人ADHD特征自评测试（ASRS简化版）</title>
+    <style>
+        /* --- 基础样式优化 --- */
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0; /* 移动端移除边距 */
+            padding: 10px; /* 增加一点内边距 */
+            background-color: #f4f7f9;
+            color: #333;
+            font-size: 16px; /* 基础字体大小 */
+        }
+        .container {
+            /* 关键改动：移除 max-width，让其在移动端占满宽度 */
+            width: 100%;
+            margin: auto;
+            background: #fff;
+            padding: 15px; /* 减少内边距适应移动端 */
+            border-radius: 0; /* 移动端不设圆角 */
+            box-shadow: none; /* 移动端移除阴影 */
+        }
+        @media (min-width: 600px) {
+            /* 桌面端恢复样式 */
+            .container {
+                max-width: 800px;
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #e74c3c;
+            border-bottom: 3px solid #e74c3c;
+            font-size: 1.5em; /* 调整标题大小 */
+        }
+        .instruction, .disclaimer-box {
+            background-color: #ecf0f1;
+            padding: 10px;
+            border-left: 5px solid #3498db;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        .disclaimer-box {
+            border-left: 5px solid #e74c3c;
+            background-color: #fce4e4;
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .question-list {
+            list-style: none;
+            padding: 0;
+        }
+        .question-item {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .question-item strong {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+        /* --- 选项布局优化：在移动端垂直或堆叠显示 --- */
+        .options {
+            display: flex;
+            flex-wrap: wrap; /* 允许换行 */
+            justify-content: space-between; /* 尝试均匀分布 */
+        }
+        .options label {
+            flex-grow: 1; /* 允许标签增长 */
+            min-width: 80px; /* 最小宽度 */
+            margin: 5px 2px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            text-align: center;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .options input[type="radio"] {
+            display: none; /* 隐藏原始单选框 */
+        }
+        .options input[type="radio"]:checked + span {
+            background-color: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        .options label span {
+            display: block;
+        }
+
+        /* --- 表格响应式优化 --- */
+        .scoring-table, .analysis-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            display: block; /* 默认block，更容易控制 */
+            overflow-x: auto; /* 在小屏幕上允许水平滚动 */
+            white-space: nowrap; /* 防止内容自动换行导致混乱 */
+        }
+        @media (max-width: 600px) {
+            /* 针对移动端，尝试让表格内容堆叠，而不是水平滚动，但对于这种多列表格难度较大，
+               因此保持 overflow-x: auto 是最可靠的方案。这里只调整字体和边距。 */
+            .scoring-table th, .scoring-table td,
+            .analysis-table th, .analysis-table td {
+                padding: 8px 5px;
+                font-size: 0.85em;
+            }
+        }
+        /* 恢复通用表格样式 */
+        .scoring-table th, .scoring-table td,
+        .analysis-table th, .analysis-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            white-space: normal; /* 恢复内部内容正常换行 */
+        }
+        .scoring-table th, .analysis-table th {
+            background-color: #34495e;
+            color: white;
+        }
+        .risk-low { background-color: #e6ffe6; border-left: 5px solid #2ecc71; }
+        .risk-medium { background-color: #fff8e1; border-left: 5px solid #f39c12; }
+        .risk-high { background-color: #fbe6e6; border-left: 5px solid #e74c3c; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>成人ADHD特征自评测试（简化版）</h1>
+
+    <div class="instruction">
+        <h3>测试说明</h3>
+        <p>本测试基于世界卫生组织(WHO)成人ADHD自评量表(ASRS-v1.1)简化版设计，用于<strong>初步评估</strong>成人注意力缺陷/多动障碍的特征。<strong>测试结果仅供参考，不能替代专业诊断。</strong></p>
+        <p><strong>请根据过去6个月的情况，评估以下描述与您实际情况的符合程度：</strong></p>
+    </div>
+
+    <h2>测试题目</h2>
+    <form id="adhd-test-form">
+        <ol class="question-list">
+            <li class="question-item">
+                <strong>1. 当需要完成一项枯燥或重复性任务时，我常常难以保持注意力集中</strong>
+                <div class="options">
+                    <label><input type="radio" name="q1" value="0" required><span>从不 (0分)</span></label>
+                    <label><input type="radio" name="q1" value="1"><span>很少 (1分)</span></label>
+                    <label><input type="radio" name="q1" value="2"><span>有时 (2分)</span></label>
+                    <label><input type="radio" name="q1" value="3"><span>经常 (3分)</span></label>
+                    <label><input type="radio" name="q1" value="4"><span>总是 (4分)</span></label>
+                </div>
+            </li>
+            <li class="question-item">
+                <strong>2. 我经常做白日梦或"走神"，即使是在应该专注的时候</strong>
+                <div class="options">
+                    <label><input type="radio" name="q2" value="0" required><span>从不 (0分)</span></label>
+                    <label><input type="radio" name="q2" value="1"><span>很少 (1分)</span></label>
+                    <label><input type="radio" name="q2" value="2"><span>有时 (2分)</span></label>
+                    <label><input type="radio" name="q2" value="3"><span>经常 (3分)</span></label>
+                    <label><input type="radio" name="q2" value="4"><span>总是 (4分)</span></label>
+                </div>
+            </li>
+            <li class="question-item">
+                <strong>3. 我很难有条理地完成任务，经常从一个任务跳到另一个任务</strong>
+                <div class="options">
+                    <label><input type="radio" name="q3" value="0" required><span>从不 (0分)</span></label>
+                    <label><input type="radio" name="q3" value="1"><span>很少 (1分)</span></label>
+                    <label><input type="radio" name="q3" value="2"><span>有时 (2分)</span></label>
+                    <label><input type="radio" name="q3" value="3"><span>经常 (3分)</span></label>
+                    <label><input type="radio" name="q3" value="4"><span>总是 (4分)</span></label>
+                </div>
+            </li>
+            <li class="question-item">
+                <strong>4. 我经常拖延开始需要大量脑力劳动的任务</strong>
+                <div class="options">
+                    <label><input type="radio" name="q4" value="0" required><span>从不 (0分)</span></label>
+                    <label><input type="radio" name="q4" value="1"><span>很少 (1分)</span></label>
+                    <label><input type="radio" name="q4" value="2"><span>有时 (2分)</span></label>
+                    <label><input type="radio" name="q4" value="3"><span>经常 (3分)</span></label>
+                    <label><input type="radio" name="q4" value="4"><span>总是 (4分)</span></label>
+                </div>
+            </li>
+            <li class="question-item">
+                <strong>5. 当需要长时间坐着时，我会感到烦躁不安（如开会、看电影）</strong>
+                <div class="options">
+                    <label><input type="radio" name="q5" value="0" required><span>从不 (0分)</span></label>
+                    <label><input type="radio" name="q5" value="1"><span>很少 (1分)</span></label>
+                    <label><input type="radio" name="q5" value="2"><span>有时 (2分)</span></label>
+                    <label><input type="radio" name="q5" value="3"><span>经常 (3分)</span></label>
+                    <label><input type="radio" name="q5" value="4"><span>总是 (4分)</span></label>
+                </div>
+            </li>
+            <li class="question-item">
+                <strong>6. 我经常在不恰当的时候打断别人的谈话</strong>
+                <div class="options">
+                    <label><input type="radio" name="q6" value="0" required><span>从不 (0分)</span></label>
+                    <label><input type="radio" name="q6" value="1"><span>很少 (1分)</span></label>
+                    <label><input type="radio" name="q6" value="2"><span>有时 (2分)</span></label>
+                    <label><input type="radio" name="q6" value="3"><span>经常 (3分)</span></label>
+                    <label><input type="radio" name="q6" value="4"><span>总是 (4分)</span></label>
+                </div>
+            </li>
+            <li class="question-item">
+                <strong>7. 我经常冲动地做出决定或承诺，而没有充分考虑后果</strong>
+                <div class="options">
+                    <label><input type="radio" name="q7" value="0" required><span>从不 (0分)</span></label>
+                    <label><input type="radio" name="q7" value="1"><span>很少 (1分)</span></label>
+                    <label><input type="radio" name="q7" value="2"><span>有时 (2分)</span></label>
+                    <label><input type="radio" name="q7" value="3"><span>经常 (3分)</span></label>
+                    <label><input type="radio" name="q7" value="4"><span>总是 (4分)</span></label>
+                </div>
+            </li>
+            <li class="question-item">
+                <strong>8. 我很难耐心等待轮到我（如排队、等待发言）</strong>
+                <div class="options">
+                    <label><input type="radio" name="q8" value="0" required><span>从不 (0分)</span></label>
+                    <label><input type="radio" name="q8" value="1"><span>很少 (1分)</span></label>
+                    <label><input type="radio" name="q8" value="2"><span>有时 (2分)</span></label>
+                    <label><input type="radio" name="q8" value="3"><span>经常 (3分)</span></label>
+                    <label><input type="radio" name="q8" value="4"><span>总是 (4分)</span></label>
+                </div>
+            </li>
+            <li class="question-item">
+                <strong>9. 我经常丢失日常用品（如钥匙、手机、钱包等）</strong>
+                <div class="options">
+                    <label><input type="radio" name="q9" value="0" required><span>从不 (0分)</span></label>
+                    <label><input type="radio" name="q9" value="1"><span>很少 (1分)</span></label>
+                    <label><input type="radio" name="q9" value="2"><span>有时 (2分)</span></label>
+                    <label><input type="radio" name="q9" value="3"><span>经常 (3分)</span></label>
+                    <label><input type="radio" name="q9" value="4"><span>总是 (4分)</span></label>
+                </div>
+            </li>
+            <li class="question-item">
+                <strong>10. 我很难记住约定、截止日期或需要完成的任务</strong>
+                <div class="options">
+                    <label><input type="radio" name="q10" value="0" required><span>从不 (0分)</span></label>
+                    <label><input type="radio" name="q10" value="1"><span>很少 (1分)</span></label>
+                    <label><input type="radio" name="q10" value="2"><span>有时 (2分)</span></label>
+                    <label><input type="radio" name="q10" value="3"><span>经常 (3分)</span></label>
+                    <label><input type="radio" name="q10" value="4"><span>总是 (4分)</span></label>
+                </div>
+            </li>
+            <li class="question-item">
+                <strong>11. 我经常在对话中走神，难以跟上对方的思路</strong>
+                <div class="options">
+                    <label><input type="radio" name="q11" value="0" required><span>从不 (0分)</span></label>
+                    <label><input type="radio" name="q11" value="1"><span>很少 (1分)</span></label>
+                    <label><input type="radio" name="q11" value="2"><span>有时 (2分)</span></label>
+                    <label><input type="radio" name="q11" value="3"><span>经常 (3分)</span></label>
+                    <label><input type="radio" name="q11" value="4"><span>总是 (4分)</span></label>
+                </div>
+            </li>
+            <li class="question-item">
+                <strong>12. 我的工作空间或生活环境通常杂乱无章</strong>
+                <div class="options">
+                    <label><input type="radio" name="q12" value="0" required><span>从不 (0分)</span></label>
+                    <label><input type="radio" name="q12" value="1"><span>很少 (1分)</span></label>
+                    <label><input type="radio" name="q12" value="2"><span>有时 (2分)</span></label>
+                    <label><input type="radio" name="q12" value="3"><span>经常 (3分)</span></label>
+                    <label><input type="radio" name="q12" value="4"><span>总是 (4分)</span></label>
+                </div>
+            </li>
+            <li class="question-item">
+                <strong>13. 我容易因为小的干扰而分心</strong>
+                <div class="options">
+                    <label><input type="radio" name="q13" value="0" required><span>从不 (0分)</span></label>
+                    <label><input type="radio" name="q13" value="1"><span>很少 (1分)</span></label>
+                    <label><input type="radio" name="q13" value="2"><span>有时 (2分)</span></label>
+                    <label><input type="radio" name="q13" value="3"><span>经常 (3分)</span></label>
+                    <label><input type="radio" name="q13" value="4"><span>总是 (4分)</span></label>
+                </div>
+            </li>
+            <li class="question-item">
+                <strong>14. 我经常追求即时满足，难以为了长期目标而坚持</strong>
+                <div class="options">
+                    <label><input type="radio" name="q14" value="0" required><span>从不 (0分)</span></label>
+                    <label><input type="radio" name="q14" value="1"><span>很少 (1分)</span></label>
+                    <label><input type="radio" name="q14" value="2"><span>有时 (2分)</span></label>
+                    <label><input type="radio" name="q14" value="3"><span>经常 (3分)</span></label>
+                    <label><input type="radio" name="q14" value="4"><span>总是 (4分)</span></label>
+                </div>
+            </li>
+            <li class="question-item">
+                <strong>15. 我内心常常感到一种"不安"或"坐立不安"的感觉</strong>
+                <div class="options">
+                    <label><input type="radio" name="q15" value="0" required><span>从不 (0分)</span></label>
+                    <label><input type="radio" name="q15" value="1"><span>很少 (1分)</span></label>
+                    <label><input type="radio" name="q15" value="2"><span>有时 (2分)</span></label>
+                    <label><input type="radio" name="q15" value="3"><span>经常 (3分)</span></label>
+                    <label><input type="radio" name="q15" value="4"><span>总是 (4分)</span></label>
+                </div>
+            </li>
+            <li class="question-item">
+                <strong>16. 我难以按照指示完成任务，即使这些指示很清楚</strong>
+                <div class="options">
+                    <label><input type="radio" name="q16" value="0" required><span>从不 (0分)</span></label>
+                    <label><input type="radio" name="q16" value="1"><span>很少 (1分)</span></label>
+                    <label><input type="radio" name="q16" value="2"><span>有时 (2分)</span></label>
+                    <label><input type="radio" name="q16" value="3"><span>经常 (3分)</span></label>
+                    <label><input type="radio" name="q16" value="4"><span>总是 (4分)</span></label>
+                </div>
+            </li>
+            <li class="question-item">
+                <strong>17. 我很难安静地参与休闲活动</strong>
+                <div class="options">
+                    <label><input type="radio" name="q17" value="0" required><span>从不 (0分)</span></label>
+                    <label><input type="radio" name="q17" value="1"><span>很少 (1分)</span></label>
+                    <label><input type="radio" name="q17" value="2"><span>有时 (2分)</span></label>
+                    <label><input type="radio" name="q17" value="3"><span>经常 (3分)</span></label>
+                    <label><input type="radio" name="q17" value="4"><span>总是 (4分)</span></label>
+                </div>
+            </li>
+            <li class="question-item">
+                <strong>18. 我经常说话过多，难以控制说话的冲动</strong>
+                <div class="options">
+                    <label><input type="radio" name="q18" value="0" required><span>从不 (0分)</span></label>
+                    <label><input type="radio" name="q18" value="1"><span>很少 (1分)</span></label>
+                    <label><input type="radio" name="q18" value="2"><span>有时 (2分)</span></label>
+                    <label><input type="radio" name="q18" value="3"><span>经常 (3分)</span></label>
+                    <label><input type="radio" name="q18" value="4"><span>总是 (4分)</span></label>
+                </div>
+            </li>
+        </ol>
+        <button type="submit" style="display: block; width: 100%; padding: 15px; background-color: #2ecc71; color: white; border: none; border-radius: 5px; font-size: 1.1em; cursor: pointer; margin-top: 20px;">查看我的测试结果</button>
+    </form>
+
+    <div id="results" style="display: none; margin-top: 40px;">
+        <h2>📊 计分方法与分析逻辑</h2>
+        <div class="scoring-section">
+            <h3>计分规则：</h3>
+            <table class="scoring-table">
+                <tr><th>选项</th><th>得分</th></tr>
+                <tr><td>从不</td><td>0分</td></tr>
+                <tr><td>很少</td><td>1分</td></tr>
+                <tr><td>有时</td><td>2分</td></tr>
+                <tr><td>经常</td><td>3分</td></tr>
+                <tr><td>总是</td><td>4分</td></tr>
+            </table>
+
+            <h3>维度分析：</h3>
+            <div style="overflow-x: auto;"> 
+                <table class="scoring-table">
+                    <tr><th>维度</th><th>题号</th><th>总分范围</th><th>临界值（提示可能存在特征）</th></tr>
+                    <tr><td>注意力缺陷维度</td><td>1, 2, 3, 4, 9, 10, 11, 12, 13, 16 (共10题)</td><td>0 - 40分</td><td>≥ 16分</td></tr>
+                    <tr><td>多动/冲动维度</td><td>5, 6, 7, 8, 14, 15, 17, 18 (共8题)</td><td>0 - 32分</td><td>≥ 14分</td></tr>
+                    <tr><th>总分范围</th><td colspan="3">0 - 72分</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <h2>结果分析模板</h2>
+        <div style="overflow-x: auto;">
+            <table class="analysis-table">
+                <thead>
+                    <tr>
+                        <th>风险范围</th>
+                        <th>总分范围</th>
+                        <th>结果说明</th>
+                        <th>建议</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="risk-low">
+                        <td class="risk-level"><strong>低风险范围</strong></td>
+                        <td>0 - 27分</td>
+                        <td>
+                            <p>根据您的回答，您表现出的ADHD特征在正常范围内。您可能偶尔会遇到注意力不集中或冲动的情况，但这不太可能达到影响日常功能的程度。</p>
+                        </td>
+                        <td>
+                            <ul>
+                                <li>继续保持良好的时间管理和组织习惯。</li>
+                                <li>如果特定情境下有注意力困难，可以尝试环境调整或短暂休息。</li>
+                                <li>无需特别担心，但如果您在某些方面感到困扰，可尝试针对性的自我调节策略。</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr class="risk-medium">
+                        <td class="risk-level"><strong>中等风险范围</strong></td>
+                        <td>28 - 45分</td>
+                        <td>
+                            <p>您表现出中等程度的ADHD特征。这些特征可能在某些情境下对您的工作、学习或人际关系造成一定影响。</p>
+                        </td>
+                        <td>
+                            <ul>
+                                <li><strong>自我观察：</strong>记录这些特征在何时何地最明显，以及它们如何影响您的生活。</li>
+                                <li><strong>策略尝试：</strong>
+                                    <ul>
+                                        <li>使用外部提醒系统（日历、待办清单、闹钟）。</li>
+                                        <li>将大任务分解为小步骤。</li>
+                                        <li>创建无干扰的工作环境。</li>
+                                    </ul>
+                                </li>
+                                <li><strong>初步评估：</strong>考虑向心理咨询师或全科医生描述您的情况，获取初步建议。</li>
+                                <li><strong>生活方式调整：</strong>确保充足的睡眠、规律的运动和健康饮食，这些能显著改善注意力功能。</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr class="risk-high">
+                        <td class="risk-level"><strong>高风险范围</strong></td>
+                        <td>46 - 72分</td>
+                        <td>
+                            <p>您表现出<strong>显著的ADHD特征</strong>。这些特征很可能对您的日常生活、工作表现或人际关系产生实质性影响。</p>
+                        </td>
+                        <td>
+                            <ul>
+                                <li><strong>寻求专业评估：</strong>建议预约精神科医生或临床心理学家进行正式评估。</li>
+                                <li><strong>评估准备：</strong>
+                                    <ul>
+                                        <li>记录您的具体困难案例。</li>
+                                        <li>回顾这些特征是否从童年时期（12岁前）就已存在。</li>
+                                        <li>了解家族中是否有类似情况。</li>
+                                    </ul>
+                                </li>
+                                <li><strong>综合干预：</strong>专业评估可能引导出以下帮助：
+                                    <ul>
+                                        <li>认知行为疗法。</li>
+                                        <li>药物治疗（如适用）。</li>
+                                        <li>执行功能训练和环境调整策略。</li>
+                                    </ul>
+                                </li>
+                                <li><strong>支持资源：</strong>加入ADHD支持团体或阅读相关自助书籍，寻求理解和支持。</li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="disclaimer-box" style="margin-top: 40px;">
+        <h3>🔔 重要免责声明与使用说明</h3>
+        <ul>
+            <li><strong>非诊断工具：</strong>本测试是自评筛查工具，<strong>不能替代专业医疗诊断</strong>。只有经过专业训练的精神科医生或临床心理学家才能做出ADHD的正式诊断。</li>
+            <li><strong>症状重叠：</strong>许多其他情况（如焦虑、抑郁、双相障碍、睡眠障碍、甲状腺问题或单纯压力过大）也可能导致类似ADHD的症状。专业评估的一个重要目的就是进行鉴别诊断。</li>
+            <li><strong>童年追溯：</strong>ADHD是一种神经发育障碍，症状通常从儿童期开始。成人ADHD诊断需要证明症状在<strong>12岁前</strong>就已存在。</li>
+            <li><strong>功能损害：</strong>诊断不仅基于症状存在，还需要这些症状在至少两个生活领域（如工作、家庭、社交）造成<strong>显著且持续的功能损害</strong>。</li>
+            <li><strong>谨慎使用：</strong>请不要根据此测试结果自我诊断或自行用药。如果您的结果显示高风险，请将其视为<strong>寻求专业评估的指征</strong>，而非确定的诊断。</li>
+            <li><strong>专业求助：</strong>如果您正因此感到痛苦或生活受到显著影响，无论测试结果如何，都鼓励您寻求专业心理健康服务。</li>
+        </ul>
+    </div>
+
+</div>
+
+<script>
+    document.getElementById('adhd-test-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // 阻止表单默认提交行为
+
+        const questions = [1, 2, 3, 4, 9, 10, 11, 12, 13, 16, 5, 6, 7, 8, 14, 15, 17, 18];
+        const scores = {};
+        let totalScore = 0;
+        let allAnswered = true;
+
+        // 收集所有得分
+        questions.forEach(qNum => {
+            const selector = `input[name="q${qNum}"]:checked`;
+            const element = document.querySelector(selector);
+            if (element) {
+                const score = parseInt(element.value);
+                scores[`q${qNum}`] = score;
+                totalScore += score;
+            } else {
+                allAnswered = false; 
+            }
+        });
+
+        if (!allAnswered) {
+            alert('请完成所有题目才能查看结果！');
+            return;
+        }
+
+        // 维度计算
+        const inattentionQuestions = [1, 2, 3, 4, 9, 10, 11, 12, 13, 16];
+        const hyperimpulsiveQuestions = [5, 6, 7, 8, 14, 15, 17, 18];
+
+        let inattentionScore = 0;
+        inattentionQuestions.forEach(qNum => inattentionScore += scores[`q${qNum}`]);
+
+        let hyperimpulsiveScore = 0;
+        hyperimpulsiveQuestions.forEach(qNum => hyperimpulsiveScore += scores[`q${qNum}`]);
+
+        // 风险判断（基于总分）
+        let riskLevel = '';
+        if (totalScore >= 46) {
+            riskLevel = '高风险范围';
+        } else if (totalScore >= 28) {
+            riskLevel = '中等风险范围';
+        } else {
+            riskLevel = '低风险范围';
+        }
+
+        // 显示结果
+        const resultsDiv = document.getElementById('results');
+        
+        // 移除旧的 summary
+        let oldSummary = resultsDiv.querySelector('h3');
+        if (oldSummary) oldSummary.parentNode.removeChild(oldSummary);
+        oldSummary = resultsDiv.querySelector('p');
+        while(oldSummary && oldSummary.style.backgroundColor != 'rgb(240, 248, 255)') { // 粗略判断前三个p标签
+            oldSummary.parentNode.removeChild(oldSummary);
+            oldSummary = resultsDiv.querySelector('p');
+        }
+        if (oldSummary) oldSummary.parentNode.removeChild(oldSummary);
+
+        // 在结果部分添加实际得分
+        const scoreSummary = document.createElement('div');
+        scoreSummary.innerHTML = `
+            <h3>您的初步测试结果：</h3>
+            <p><strong>总得分：</strong> ${totalScore} 分 (总分范围 0-72)</p>
+            <p><strong>注意力缺陷维度得分：</strong> ${inattentionScore} 分 (临界值 ≥ 16)</p>
+            <p><strong>多动/冲动维度得分：</strong> ${hyperimpulsiveScore} 分 (临界值 ≥ 14)</p>
+            <p style="padding: 10px; background-color: #f0f8ff; border: 1px dashed #3498db; border-radius: 5px; text-align: center; font-size: 1.1em;"><strong>您的初步风险提示：</strong> ${riskLevel}</p>
+        `;
+        resultsDiv.prepend(scoreSummary);
+        resultsDiv.style.display = 'block';
+
+        // 滚动到结果
+        resultsDiv.scrollIntoView({ behavior: 'smooth' });
+    });
+</script>
+
+</body>
+</html>
