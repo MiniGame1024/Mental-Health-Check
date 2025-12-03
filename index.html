@@ -2,533 +2,386 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>成人ADHD特征自评测试（ASRS简化版）</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SCL-90 心理健康自评量表</title>
     <style>
-        /* --- 基础样式优化 --- */
-        body {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0; /* 移动端移除边距 */
-            padding: 10px; /* 增加一点内边距 */
-            background-color: #f4f7f9;
-            color: #333;
-            font-size: 16px; /* 基础字体大小 */
-        }
-        .container {
-            /* 关键改动：移除 max-width，让其在移动端占满宽度 */
-            width: 100%;
-            margin: auto;
-            background: #fff;
-            padding: 15px; /* 减少内边距适应移动端 */
-            border-radius: 0; /* 移动端不设圆角 */
-            box-shadow: none; /* 移动端移除阴影 */
-        }
-        @media (min-width: 600px) {
-            /* 桌面端恢复样式 */
-            .container {
-                max-width: 800px;
-                padding: 30px;
-                border-radius: 10px;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            }
-        }
-        h1, h2, h3 {
-            color: #2c3e50;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 10px;
-            margin-top: 20px;
-        }
-        h1 {
-            text-align: center;
-            color: #e74c3c;
-            border-bottom: 3px solid #e74c3c;
-            font-size: 1.5em; /* 调整标题大小 */
-        }
-        .instruction, .disclaimer-box {
-            background-color: #ecf0f1;
-            padding: 10px;
-            border-left: 5px solid #3498db;
-            margin-bottom: 15px;
-            border-radius: 5px;
-        }
-        .disclaimer-box {
-            border-left: 5px solid #e74c3c;
-            background-color: #fce4e4;
-            color: #e74c3c;
-            font-weight: bold;
-        }
-        .question-list {
-            list-style: none;
-            padding: 0;
-        }
-        .question-item {
-            background: #fff;
-            border: 1px solid #ddd;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-        }
-        .question-item strong {
-            display: block;
-            margin-bottom: 8px;
-            color: #2c3e50;
-        }
-        /* --- 选项布局优化：在移动端垂直或堆叠显示 --- */
-        .options {
-            display: flex;
-            flex-wrap: wrap; /* 允许换行 */
-            justify-content: space-between; /* 尝试均匀分布 */
-        }
-        .options label {
-            flex-grow: 1; /* 允许标签增长 */
-            min-width: 80px; /* 最小宽度 */
-            margin: 5px 2px;
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            text-align: center;
-            font-size: 0.85em;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .options input[type="radio"] {
-            display: none; /* 隐藏原始单选框 */
-        }
-        .options input[type="radio"]:checked + span {
-            background-color: #3498db;
-            color: white;
-            border-color: #3498db;
-        }
-        .options label span {
-            display: block;
+        :root {
+            /*在这里修改颜色，目前是治愈绿 */
+            --primary-color: #42b983; 
+            --bg-color: #f5f7fa;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --secondary-text: #666666;
+            --success: #2ecc71;
+            --warning: #f1c40f;
+            --danger: #e74c3c;
         }
 
-        /* --- 表格响应式优化 --- */
-        .scoring-table, .analysis-table {
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 欢迎页与结果页 */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h1, h2 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
             width: 100%;
-            border-collapse: collapse;
             margin-top: 15px;
-            display: block; /* 默认block，更容易控制 */
-            overflow-x: auto; /* 在小屏幕上允许水平滚动 */
-            white-space: nowrap; /* 防止内容自动换行导致混乱 */
+            transition: background 0.3s;
+            -webkit-tap-highlight-color: transparent;
         }
-        @media (max-width: 600px) {
-            /* 针对移动端，尝试让表格内容堆叠，而不是水平滚动，但对于这种多列表格难度较大，
-               因此保持 overflow-x: auto 是最可靠的方案。这里只调整字体和边距。 */
-            .scoring-table th, .scoring-table td,
-            .analysis-table th, .analysis-table td {
-                padding: 8px 5px;
-                font-size: 0.85em;
-            }
+
+        .btn:active {
+            opacity: 0.8;
         }
-        /* 恢复通用表格样式 */
-        .scoring-table th, .scoring-table td,
-        .analysis-table th, .analysis-table td {
-            border: 1px solid #ddd;
-            padding: 10px;
+
+        /* 进度条 */
+        .progress-container {
+            margin-bottom: 20px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            height: 8px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: right;
+            font-size: 12px;
+            color: var(--secondary-text);
+            margin-top: -15px;
+            margin-bottom: 15px;
+        }
+
+        /* 题目区域 */
+        #quiz-section {
+            display: none;
+            flex: 1;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 24px;
+            flex-grow: 1;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background: #f0f2f5;
+            border: 1px solid #e1e4e8;
+            padding: 15px;
+            border-radius: 8px;
             text-align: left;
-            white-space: normal; /* 恢复内部内容正常换行 */
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
         }
-        .scoring-table th, .analysis-table th {
-            background-color: #34495e;
+
+        .option-btn:active, .option-btn.selected {
+            background: #eafff6; /* 点击时的背景色也微调了 */
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        /* 结果区域 */
+        #result-section {
+            display: none;
+        }
+
+        .result-item {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .result-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .result-bar-bg {
+            background: #eee;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .result-bar-fill {
+            height: 100%;
+            border-radius: 5px;
+        }
+
+        .score-badge {
+            font-size: 12px;
+            padding: 2px 6px;
+            border-radius: 4px;
             color: white;
         }
-        .risk-low { background-color: #e6ffe6; border-left: 5px solid #2ecc71; }
-        .risk-medium { background-color: #fff8e1; border-left: 5px solid #f39c12; }
-        .risk-high { background-color: #fbe6e6; border-left: 5px solid #e74c3c; }
+
+        .warning-text {
+            font-size: 12px;
+            color: #999;
+            margin-top: 20px;
+            text-align: left;
+            line-height: 1.4;
+            background: #fff3cd;
+            color: #856404;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .desc-text {
+            font-size: 14px;
+            color: var(--secondary-text);
+            margin-bottom: 20px;
+        }
+
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>成人ADHD特征自评测试（简化版）</h1>
-
-    <div class="instruction">
-        <h3>测试说明</h3>
-        <p>本测试基于世界卫生组织(WHO)成人ADHD自评量表(ASRS-v1.1)简化版设计，用于<strong>初步评估</strong>成人注意力缺陷/多动障碍的特征。<strong>测试结果仅供参考，不能替代专业诊断。</strong></p>
-        <p><strong>请根据过去6个月的情况，评估以下描述与您实际情况的符合程度：</strong></p>
+    <div id="welcome-section" class="card">
+        <h1>SCL-90<br>心理健康自评量表</h1>
+        <p class="desc-text">本量表共90个项目，包含10个心理健康因子。请根据您<b>最近一周</b>（包括今天）的实际感觉进行回答。</p>
+        <div style="text-align: left; font-size: 14px; background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+            <strong>评分标准：</strong><br>
+            1. 没有：自觉无该项症状<br>
+            2. 很轻：自觉有该项症状，但对您无实际影响<br>
+            3. 中度：自觉有该项症状，对您有一定影响<br>
+            4. 偏重：自觉常有该项症状，对您有相当程度影响<br>
+            5. 严重：自觉该症状频度和强度都十分严重
+        </div>
+        <button class="btn" onclick="startQuiz()">开始测试</button>
     </div>
 
-    <h2>测试题目</h2>
-    <form id="adhd-test-form">
-        <ol class="question-list">
-            <li class="question-item">
-                <strong>1. 当需要完成一项枯燥或重复性任务时，我常常难以保持注意力集中</strong>
-                <div class="options">
-                    <label><input type="radio" name="q1" value="0" required><span>从不 (0分)</span></label>
-                    <label><input type="radio" name="q1" value="1"><span>很少 (1分)</span></label>
-                    <label><input type="radio" name="q1" value="2"><span>有时 (2分)</span></label>
-                    <label><input type="radio" name="q1" value="3"><span>经常 (3分)</span></label>
-                    <label><input type="radio" name="q1" value="4"><span>总是 (4分)</span></label>
-                </div>
-            </li>
-            <li class="question-item">
-                <strong>2. 我经常做白日梦或"走神"，即使是在应该专注的时候</strong>
-                <div class="options">
-                    <label><input type="radio" name="q2" value="0" required><span>从不 (0分)</span></label>
-                    <label><input type="radio" name="q2" value="1"><span>很少 (1分)</span></label>
-                    <label><input type="radio" name="q2" value="2"><span>有时 (2分)</span></label>
-                    <label><input type="radio" name="q2" value="3"><span>经常 (3分)</span></label>
-                    <label><input type="radio" name="q2" value="4"><span>总是 (4分)</span></label>
-                </div>
-            </li>
-            <li class="question-item">
-                <strong>3. 我很难有条理地完成任务，经常从一个任务跳到另一个任务</strong>
-                <div class="options">
-                    <label><input type="radio" name="q3" value="0" required><span>从不 (0分)</span></label>
-                    <label><input type="radio" name="q3" value="1"><span>很少 (1分)</span></label>
-                    <label><input type="radio" name="q3" value="2"><span>有时 (2分)</span></label>
-                    <label><input type="radio" name="q3" value="3"><span>经常 (3分)</span></label>
-                    <label><input type="radio" name="q3" value="4"><span>总是 (4分)</span></label>
-                </div>
-            </li>
-            <li class="question-item">
-                <strong>4. 我经常拖延开始需要大量脑力劳动的任务</strong>
-                <div class="options">
-                    <label><input type="radio" name="q4" value="0" required><span>从不 (0分)</span></label>
-                    <label><input type="radio" name="q4" value="1"><span>很少 (1分)</span></label>
-                    <label><input type="radio" name="q4" value="2"><span>有时 (2分)</span></label>
-                    <label><input type="radio" name="q4" value="3"><span>经常 (3分)</span></label>
-                    <label><input type="radio" name="q4" value="4"><span>总是 (4分)</span></label>
-                </div>
-            </li>
-            <li class="question-item">
-                <strong>5. 当需要长时间坐着时，我会感到烦躁不安（如开会、看电影）</strong>
-                <div class="options">
-                    <label><input type="radio" name="q5" value="0" required><span>从不 (0分)</span></label>
-                    <label><input type="radio" name="q5" value="1"><span>很少 (1分)</span></label>
-                    <label><input type="radio" name="q5" value="2"><span>有时 (2分)</span></label>
-                    <label><input type="radio" name="q5" value="3"><span>经常 (3分)</span></label>
-                    <label><input type="radio" name="q5" value="4"><span>总是 (4分)</span></label>
-                </div>
-            </li>
-            <li class="question-item">
-                <strong>6. 我经常在不恰当的时候打断别人的谈话</strong>
-                <div class="options">
-                    <label><input type="radio" name="q6" value="0" required><span>从不 (0分)</span></label>
-                    <label><input type="radio" name="q6" value="1"><span>很少 (1分)</span></label>
-                    <label><input type="radio" name="q6" value="2"><span>有时 (2分)</span></label>
-                    <label><input type="radio" name="q6" value="3"><span>经常 (3分)</span></label>
-                    <label><input type="radio" name="q6" value="4"><span>总是 (4分)</span></label>
-                </div>
-            </li>
-            <li class="question-item">
-                <strong>7. 我经常冲动地做出决定或承诺，而没有充分考虑后果</strong>
-                <div class="options">
-                    <label><input type="radio" name="q7" value="0" required><span>从不 (0分)</span></label>
-                    <label><input type="radio" name="q7" value="1"><span>很少 (1分)</span></label>
-                    <label><input type="radio" name="q7" value="2"><span>有时 (2分)</span></label>
-                    <label><input type="radio" name="q7" value="3"><span>经常 (3分)</span></label>
-                    <label><input type="radio" name="q7" value="4"><span>总是 (4分)</span></label>
-                </div>
-            </li>
-            <li class="question-item">
-                <strong>8. 我很难耐心等待轮到我（如排队、等待发言）</strong>
-                <div class="options">
-                    <label><input type="radio" name="q8" value="0" required><span>从不 (0分)</span></label>
-                    <label><input type="radio" name="q8" value="1"><span>很少 (1分)</span></label>
-                    <label><input type="radio" name="q8" value="2"><span>有时 (2分)</span></label>
-                    <label><input type="radio" name="q8" value="3"><span>经常 (3分)</span></label>
-                    <label><input type="radio" name="q8" value="4"><span>总是 (4分)</span></label>
-                </div>
-            </li>
-            <li class="question-item">
-                <strong>9. 我经常丢失日常用品（如钥匙、手机、钱包等）</strong>
-                <div class="options">
-                    <label><input type="radio" name="q9" value="0" required><span>从不 (0分)</span></label>
-                    <label><input type="radio" name="q9" value="1"><span>很少 (1分)</span></label>
-                    <label><input type="radio" name="q9" value="2"><span>有时 (2分)</span></label>
-                    <label><input type="radio" name="q9" value="3"><span>经常 (3分)</span></label>
-                    <label><input type="radio" name="q9" value="4"><span>总是 (4分)</span></label>
-                </div>
-            </li>
-            <li class="question-item">
-                <strong>10. 我很难记住约定、截止日期或需要完成的任务</strong>
-                <div class="options">
-                    <label><input type="radio" name="q10" value="0" required><span>从不 (0分)</span></label>
-                    <label><input type="radio" name="q10" value="1"><span>很少 (1分)</span></label>
-                    <label><input type="radio" name="q10" value="2"><span>有时 (2分)</span></label>
-                    <label><input type="radio" name="q10" value="3"><span>经常 (3分)</span></label>
-                    <label><input type="radio" name="q10" value="4"><span>总是 (4分)</span></label>
-                </div>
-            </li>
-            <li class="question-item">
-                <strong>11. 我经常在对话中走神，难以跟上对方的思路</strong>
-                <div class="options">
-                    <label><input type="radio" name="q11" value="0" required><span>从不 (0分)</span></label>
-                    <label><input type="radio" name="q11" value="1"><span>很少 (1分)</span></label>
-                    <label><input type="radio" name="q11" value="2"><span>有时 (2分)</span></label>
-                    <label><input type="radio" name="q11" value="3"><span>经常 (3分)</span></label>
-                    <label><input type="radio" name="q11" value="4"><span>总是 (4分)</span></label>
-                </div>
-            </li>
-            <li class="question-item">
-                <strong>12. 我的工作空间或生活环境通常杂乱无章</strong>
-                <div class="options">
-                    <label><input type="radio" name="q12" value="0" required><span>从不 (0分)</span></label>
-                    <label><input type="radio" name="q12" value="1"><span>很少 (1分)</span></label>
-                    <label><input type="radio" name="q12" value="2"><span>有时 (2分)</span></label>
-                    <label><input type="radio" name="q12" value="3"><span>经常 (3分)</span></label>
-                    <label><input type="radio" name="q12" value="4"><span>总是 (4分)</span></label>
-                </div>
-            </li>
-            <li class="question-item">
-                <strong>13. 我容易因为小的干扰而分心</strong>
-                <div class="options">
-                    <label><input type="radio" name="q13" value="0" required><span>从不 (0分)</span></label>
-                    <label><input type="radio" name="q13" value="1"><span>很少 (1分)</span></label>
-                    <label><input type="radio" name="q13" value="2"><span>有时 (2分)</span></label>
-                    <label><input type="radio" name="q13" value="3"><span>经常 (3分)</span></label>
-                    <label><input type="radio" name="q13" value="4"><span>总是 (4分)</span></label>
-                </div>
-            </li>
-            <li class="question-item">
-                <strong>14. 我经常追求即时满足，难以为了长期目标而坚持</strong>
-                <div class="options">
-                    <label><input type="radio" name="q14" value="0" required><span>从不 (0分)</span></label>
-                    <label><input type="radio" name="q14" value="1"><span>很少 (1分)</span></label>
-                    <label><input type="radio" name="q14" value="2"><span>有时 (2分)</span></label>
-                    <label><input type="radio" name="q14" value="3"><span>经常 (3分)</span></label>
-                    <label><input type="radio" name="q14" value="4"><span>总是 (4分)</span></label>
-                </div>
-            </li>
-            <li class="question-item">
-                <strong>15. 我内心常常感到一种"不安"或"坐立不安"的感觉</strong>
-                <div class="options">
-                    <label><input type="radio" name="q15" value="0" required><span>从不 (0分)</span></label>
-                    <label><input type="radio" name="q15" value="1"><span>很少 (1分)</span></label>
-                    <label><input type="radio" name="q15" value="2"><span>有时 (2分)</span></label>
-                    <label><input type="radio" name="q15" value="3"><span>经常 (3分)</span></label>
-                    <label><input type="radio" name="q15" value="4"><span>总是 (4分)</span></label>
-                </div>
-            </li>
-            <li class="question-item">
-                <strong>16. 我难以按照指示完成任务，即使这些指示很清楚</strong>
-                <div class="options">
-                    <label><input type="radio" name="q16" value="0" required><span>从不 (0分)</span></label>
-                    <label><input type="radio" name="q16" value="1"><span>很少 (1分)</span></label>
-                    <label><input type="radio" name="q16" value="2"><span>有时 (2分)</span></label>
-                    <label><input type="radio" name="q16" value="3"><span>经常 (3分)</span></label>
-                    <label><input type="radio" name="q16" value="4"><span>总是 (4分)</span></label>
-                </div>
-            </li>
-            <li class="question-item">
-                <strong>17. 我很难安静地参与休闲活动</strong>
-                <div class="options">
-                    <label><input type="radio" name="q17" value="0" required><span>从不 (0分)</span></label>
-                    <label><input type="radio" name="q17" value="1"><span>很少 (1分)</span></label>
-                    <label><input type="radio" name="q17" value="2"><span>有时 (2分)</span></label>
-                    <label><input type="radio" name="q17" value="3"><span>经常 (3分)</span></label>
-                    <label><input type="radio" name="q17" value="4"><span>总是 (4分)</span></label>
-                </div>
-            </li>
-            <li class="question-item">
-                <strong>18. 我经常说话过多，难以控制说话的冲动</strong>
-                <div class="options">
-                    <label><input type="radio" name="q18" value="0" required><span>从不 (0分)</span></label>
-                    <label><input type="radio" name="q18" value="1"><span>很少 (1分)</span></label>
-                    <label><input type="radio" name="q18" value="2"><span>有时 (2分)</span></label>
-                    <label><input type="radio" name="q18" value="3"><span>经常 (3分)</span></label>
-                    <label><input type="radio" name="q18" value="4"><span>总是 (4分)</span></label>
-                </div>
-            </li>
-        </ol>
-        <button type="submit" style="display: block; width: 100%; padding: 15px; background-color: #2ecc71; color: white; border: none; border-radius: 5px; font-size: 1.1em; cursor: pointer; margin-top: 20px;">查看我的测试结果</button>
-    </form>
-
-    <div id="results" style="display: none; margin-top: 40px;">
-        <h2>📊 计分方法与分析逻辑</h2>
-        <div class="scoring-section">
-            <h3>计分规则：</h3>
-            <table class="scoring-table">
-                <tr><th>选项</th><th>得分</th></tr>
-                <tr><td>从不</td><td>0分</td></tr>
-                <tr><td>很少</td><td>1分</td></tr>
-                <tr><td>有时</td><td>2分</td></tr>
-                <tr><td>经常</td><td>3分</td></tr>
-                <tr><td>总是</td><td>4分</td></tr>
-            </table>
-
-            <h3>维度分析：</h3>
-            <div style="overflow-x: auto;"> 
-                <table class="scoring-table">
-                    <tr><th>维度</th><th>题号</th><th>总分范围</th><th>临界值（提示可能存在特征）</th></tr>
-                    <tr><td>注意力缺陷维度</td><td>1, 2, 3, 4, 9, 10, 11, 12, 13, 16 (共10题)</td><td>0 - 40分</td><td>≥ 16分</td></tr>
-                    <tr><td>多动/冲动维度</td><td>5, 6, 7, 8, 14, 15, 17, 18 (共8题)</td><td>0 - 32分</td><td>≥ 14分</td></tr>
-                    <tr><th>总分范围</th><td colspan="3">0 - 72分</td></tr>
-                </table>
+    <div id="quiz-section">
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="progress-text">进度: <span id="currentNum">1</span> / 90</div>
+        
+        <div class="question-card">
+            <div class="question-text" id="questionText">题目加载中...</div>
+            <div class="options-grid">
+                <button class="option-btn" onclick="selectOption(1)">1 - 没有</button>
+                <button class="option-btn" onclick="selectOption(2)">2 - 很轻</button>
+                <button class="option-btn" onclick="selectOption(3)">3 - 中度</button>
+                <button class="option-btn" onclick="selectOption(4)">4 - 偏重</button>
+                <button class="option-btn" onclick="selectOption(5)">5 - 严重</button>
             </div>
         </div>
+    </div>
 
-        <h2>结果分析模板</h2>
-        <div style="overflow-x: auto;">
-            <table class="analysis-table">
-                <thead>
-                    <tr>
-                        <th>风险范围</th>
-                        <th>总分范围</th>
-                        <th>结果说明</th>
-                        <th>建议</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="risk-low">
-                        <td class="risk-level"><strong>低风险范围</strong></td>
-                        <td>0 - 27分</td>
-                        <td>
-                            <p>根据您的回答，您表现出的ADHD特征在正常范围内。您可能偶尔会遇到注意力不集中或冲动的情况，但这不太可能达到影响日常功能的程度。</p>
-                        </td>
-                        <td>
-                            <ul>
-                                <li>继续保持良好的时间管理和组织习惯。</li>
-                                <li>如果特定情境下有注意力困难，可以尝试环境调整或短暂休息。</li>
-                                <li>无需特别担心，但如果您在某些方面感到困扰，可尝试针对性的自我调节策略。</li>
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr class="risk-medium">
-                        <td class="risk-level"><strong>中等风险范围</strong></td>
-                        <td>28 - 45分</td>
-                        <td>
-                            <p>您表现出中等程度的ADHD特征。这些特征可能在某些情境下对您的工作、学习或人际关系造成一定影响。</p>
-                        </td>
-                        <td>
-                            <ul>
-                                <li><strong>自我观察：</strong>记录这些特征在何时何地最明显，以及它们如何影响您的生活。</li>
-                                <li><strong>策略尝试：</strong>
-                                    <ul>
-                                        <li>使用外部提醒系统（日历、待办清单、闹钟）。</li>
-                                        <li>将大任务分解为小步骤。</li>
-                                        <li>创建无干扰的工作环境。</li>
-                                    </ul>
-                                </li>
-                                <li><strong>初步评估：</strong>考虑向心理咨询师或全科医生描述您的情况，获取初步建议。</li>
-                                <li><strong>生活方式调整：</strong>确保充足的睡眠、规律的运动和健康饮食，这些能显著改善注意力功能。</li>
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr class="risk-high">
-                        <td class="risk-level"><strong>高风险范围</strong></td>
-                        <td>46 - 72分</td>
-                        <td>
-                            <p>您表现出<strong>显著的ADHD特征</strong>。这些特征很可能对您的日常生活、工作表现或人际关系产生实质性影响。</p>
-                        </td>
-                        <td>
-                            <ul>
-                                <li><strong>寻求专业评估：</strong>建议预约精神科医生或临床心理学家进行正式评估。</li>
-                                <li><strong>评估准备：</strong>
-                                    <ul>
-                                        <li>记录您的具体困难案例。</li>
-                                        <li>回顾这些特征是否从童年时期（12岁前）就已存在。</li>
-                                        <li>了解家族中是否有类似情况。</li>
-                                    </ul>
-                                </li>
-                                <li><strong>综合干预：</strong>专业评估可能引导出以下帮助：
-                                    <ul>
-                                        <li>认知行为疗法。</li>
-                                        <li>药物治疗（如适用）。</li>
-                                        <li>执行功能训练和环境调整策略。</li>
-                                    </ul>
-                                </li>
-                                <li><strong>支持资源：</strong>加入ADHD支持团体或阅读相关自助书籍，寻求理解和支持。</li>
-                            </ul>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+    <div id="result-section" class="card">
+        <h2>测试结果分析</h2>
+        <p id="totalScoreInfo" class="desc-text"></p>
+        
+        <div id="factors-container">
+            </div>
+
+        <div class="warning-text">
+            <strong>免责声明：</strong><br>
+            本测试结果仅供参考，不能作为临床诊断依据。如果您的某个因子得分较高，或者感到明显的心理不适，建议咨询专业的心理医生或前往医院就诊。
         </div>
+        <button class="btn" onclick="location.reload()" style="background-color: #666;">重新测试</button>
     </div>
-
-    <div class="disclaimer-box" style="margin-top: 40px;">
-        <h3>🔔 重要免责声明与使用说明</h3>
-        <ul>
-            <li><strong>非诊断工具：</strong>本测试是自评筛查工具，<strong>不能替代专业医疗诊断</strong>。只有经过专业训练的精神科医生或临床心理学家才能做出ADHD的正式诊断。</li>
-            <li><strong>症状重叠：</strong>许多其他情况（如焦虑、抑郁、双相障碍、睡眠障碍、甲状腺问题或单纯压力过大）也可能导致类似ADHD的症状。专业评估的一个重要目的就是进行鉴别诊断。</li>
-            <li><strong>童年追溯：</strong>ADHD是一种神经发育障碍，症状通常从儿童期开始。成人ADHD诊断需要证明症状在<strong>12岁前</strong>就已存在。</li>
-            <li><strong>功能损害：</strong>诊断不仅基于症状存在，还需要这些症状在至少两个生活领域（如工作、家庭、社交）造成<strong>显著且持续的功能损害</strong>。</li>
-            <li><strong>谨慎使用：</strong>请不要根据此测试结果自我诊断或自行用药。如果您的结果显示高风险，请将其视为<strong>寻求专业评估的指征</strong>，而非确定的诊断。</li>
-            <li><strong>专业求助：</strong>如果您正因此感到痛苦或生活受到显著影响，无论测试结果如何，都鼓励您寻求专业心理健康服务。</li>
-        </ul>
-    </div>
-
 </div>
 
 <script>
-    document.getElementById('adhd-test-form').addEventListener('submit', function(event) {
-        event.preventDefault(); // 阻止表单默认提交行为
+    // SCL-90 题目数据
+    const questions = [
+        "1. 头痛", "2. 神经过敏，心中不踏实", "3. 头脑中有不必要的想法或字句盘旋", "4. 头晕或昏倒", "5. 对异性的兴趣减退",
+        "6. 对旁人责备求全", "7. 感到别人能控制您的思想", "8. 责怪别人制造麻烦", "9. 忘性大", "10. 担心自己的衣饰整齐及仪态的端庄",
+        "11. 容易烦恼和激动", "12. 胸痛", "13. 害怕空旷的场所或街道", "14. 感到自己的精力下降，活动减慢", "15. 想结束自己的生命",
+        "16. 听到旁人听不到的声音", "17. 发抖", "18. 感到大多数人都不可信", "19. 胃口不好", "20. 容易哭泣",
+        "21. 同异性相处时感到害羞不自在", "22. 感到受骗，中了圈套或有人想抓住您", "23. 无缘无故地突然感到害怕", "24. 自己不能控制地发脾气", "25. 怕单独出门",
+        "26. 经常责怪自己", "27. 腰痛", "28. 感到难以完成任务", "29. 感到孤独", "30. 感到苦闷",
+        "31. 过分担忧", "32. 对事物不感兴趣", "33. 感到害怕", "34. 您的感情容易受到伤害", "35. 旁人能知道您的私下想法",
+        "36. 感到别人不理解您、不同情您", "37. 感到人们对您不友好，不喜欢您", "38. 做事必须做得很慢以保证做得正确", "39. 心跳得很厉害", "40. 恶心或胃部不舒服",
+        "41. 感到比不上他人", "42. 肌肉酸痛", "43. 感到有人在监视您、谈论您", "44. 难以入睡", "45. 做事必须反复检查",
+        "46. 难以作出决定", "47. 怕乘电车、公共汽车、地铁或火车", "48. 呼吸有困难", "49. 一阵阵发冷或发热", "50. 因为感到害怕而避开某些东西、场合或活动",
+        "51. 脑子变空了", "52. 身体发麻或刺痛", "53. 喉咙有梗塞感", "54. 感到没有前途没有希望", "55. 不能集中注意力",
+        "56. 感到身体的某一部分软弱无力", "57. 感到紧张或容易紧张", "58. 感到手或脚发重", "59. 想到死亡的事", "60. 吃得太多",
+        "61. 当别人看着您或谈论您时感到不自在", "62. 有一些不属于您自己的想法", "63. 有想打人或伤害他人的冲动", "64. 醒得太早", "65. 必须反复洗手、点数目或触摸某些东西",
+        "66. 睡得不稳不深", "67. 有想摔坏或破坏东西的冲动", "68. 有人与您为难", "69. 感到与别人格格不入", "70. 在公共场合（如商店、电影院、餐厅）感到不自在",
+        "71. 感到任何事情都很困难", "72. 一阵阵恐惧或惊恐", "73. 感到在公共场合吃东西很不舒服", "74. 经常与人争论", "75. 单独一人时神经很紧张",
+        "76. 别人对您的成绩没有作出恰当的评价", "77. 即使和别人在一起也感到孤单", "78. 感到坐立不安，心神不定", "79. 感到自己没有什么价值", "80. 感到熟悉的东西变成陌生或不象是真的",
+        "81. 大叫或摔东西", "82. 害怕要在公共场合昏倒", "83. 感到别人想占您的便宜", "84. 为一些有关性的念头而很苦恼", "85. 认为您应该因为自己的过错而受到惩罚",
+        "86. 感到要赶快把事情做完", "87. 感到自己的身体有严重问题", "88. 从未感到和其他人很亲近", "89. 感到有罪恶感", "90. 认为自己的脑子有毛病"
+    ];
 
-        const questions = [1, 2, 3, 4, 9, 10, 11, 12, 13, 16, 5, 6, 7, 8, 14, 15, 17, 18];
-        const scores = {};
-        let totalScore = 0;
-        let allAnswered = true;
+    // 因子归类（基于题号，从1开始，需在代码中减1）
+    const factorMap = {
+        "躯体化": [1, 4, 12, 27, 40, 42, 48, 49, 52, 53, 56, 58],
+        "强迫症状": [3, 9, 10, 28, 38, 45, 46, 51, 55, 65],
+        "人际关系敏感": [6, 21, 34, 36, 37, 41, 61, 69, 73],
+        "抑郁": [5, 14, 15, 20, 22, 26, 29, 30, 31, 32, 54, 71, 79],
+        "焦虑": [2, 17, 23, 33, 39, 57, 72, 78, 80, 86],
+        "敌对": [11, 24, 63, 67, 74, 81],
+        "恐怖": [13, 25, 47, 50, 70, 75, 82],
+        "偏执": [8, 18, 43, 68, 76, 83],
+        "精神病性": [7, 16, 35, 62, 77, 84, 85, 87, 88, 90],
+        "饮食睡眠/其他": [19, 44, 59, 60, 64, 66, 89]
+    };
 
-        // 收集所有得分
-        questions.forEach(qNum => {
-            const selector = `input[name="q${qNum}"]:checked`;
-            const element = document.querySelector(selector);
-            if (element) {
-                const score = parseInt(element.value);
-                scores[`q${qNum}`] = score;
-                totalScore += score;
-            } else {
-                allAnswered = false; 
-            }
-        });
+    let currentQuestionIndex = 0;
+    let answers = new Array(90).fill(0);
 
-        if (!allAnswered) {
-            alert('请完成所有题目才能查看结果！');
-            return;
-        }
+    function startQuiz() {
+        document.getElementById('welcome-section').style.display = 'none';
+        document.getElementById('quiz-section').style.display = 'block';
+        window.scrollTo(0, 0);
+        renderQuestion();
+    }
 
-        // 维度计算
-        const inattentionQuestions = [1, 2, 3, 4, 9, 10, 11, 12, 13, 16];
-        const hyperimpulsiveQuestions = [5, 6, 7, 8, 14, 15, 17, 18];
-
-        let inattentionScore = 0;
-        inattentionQuestions.forEach(qNum => inattentionScore += scores[`q${qNum}`]);
-
-        let hyperimpulsiveScore = 0;
-        hyperimpulsiveQuestions.forEach(qNum => hyperimpulsiveScore += scores[`q${qNum}`]);
-
-        // 风险判断（基于总分）
-        let riskLevel = '';
-        if (totalScore >= 46) {
-            riskLevel = '高风险范围';
-        } else if (totalScore >= 28) {
-            riskLevel = '中等风险范围';
-        } else {
-            riskLevel = '低风险范围';
-        }
-
-        // 显示结果
-        const resultsDiv = document.getElementById('results');
+    function renderQuestion() {
+        document.getElementById('currentNum').innerText = currentQuestionIndex + 1;
+        document.getElementById('questionText').innerText = questions[currentQuestionIndex];
         
-        // 移除旧的 summary
-        let oldSummary = resultsDiv.querySelector('h3');
-        if (oldSummary) oldSummary.parentNode.removeChild(oldSummary);
-        oldSummary = resultsDiv.querySelector('p');
-        while(oldSummary && oldSummary.style.backgroundColor != 'rgb(240, 248, 255)') { // 粗略判断前三个p标签
-            oldSummary.parentNode.removeChild(oldSummary);
-            oldSummary = resultsDiv.querySelector('p');
+        // 更新进度条
+        const progress = ((currentQuestionIndex) / 90) * 100;
+        document.getElementById('progressBar').style.width = progress + '%';
+    }
+
+    function selectOption(value) {
+        answers[currentQuestionIndex] = value;
+        
+        if (currentQuestionIndex < 89) {
+            currentQuestionIndex++;
+            // 添加一点点延迟，让用户感觉到点击反馈
+            setTimeout(() => {
+                renderQuestion();
+            }, 150);
+        } else {
+            showResults();
         }
-        if (oldSummary) oldSummary.parentNode.removeChild(oldSummary);
+    }
 
-        // 在结果部分添加实际得分
-        const scoreSummary = document.createElement('div');
-        scoreSummary.innerHTML = `
-            <h3>您的初步测试结果：</h3>
-            <p><strong>总得分：</strong> ${totalScore} 分 (总分范围 0-72)</p>
-            <p><strong>注意力缺陷维度得分：</strong> ${inattentionScore} 分 (临界值 ≥ 16)</p>
-            <p><strong>多动/冲动维度得分：</strong> ${hyperimpulsiveScore} 分 (临界值 ≥ 14)</p>
-            <p style="padding: 10px; background-color: #f0f8ff; border: 1px dashed #3498db; border-radius: 5px; text-align: center; font-size: 1.1em;"><strong>您的初步风险提示：</strong> ${riskLevel}</p>
-        `;
-        resultsDiv.prepend(scoreSummary);
-        resultsDiv.style.display = 'block';
+    function calculateResults() {
+        let results = {};
+        let totalScore = 0;
 
-        // 滚动到结果
-        resultsDiv.scrollIntoView({ behavior: 'smooth' });
-    });
+        // 计算总分
+        answers.forEach(score => totalScore += score);
+
+        // 计算因子分
+        for (let factor in factorMap) {
+            let sum = 0;
+            let count = factorMap[factor].length;
+            factorMap[factor].forEach(qIndex => {
+                // 题目序号减1对应数组索引
+                sum += answers[qIndex - 1];
+            });
+            results[factor] = (sum / count).toFixed(2);
+        }
+
+        return {
+            totalScore: totalScore,
+            factorScores: results
+        };
+    }
+
+    function getLevelInfo(score) {
+        score = parseFloat(score);
+        if (score < 2) return { text: "正常", color: "#2ecc71", percent: (score/5)*100 };
+        if (score < 3) return { text: "轻度", color: "#f1c40f", percent: (score/5)*100 };
+        if (score < 4) return { text: "中度", color: "#e67e22", percent: (score/5)*100 };
+        return { text: "重度", color: "#e74c3c", percent: (score/5)*100 };
+    }
+
+    function showResults() {
+        document.getElementById('quiz-section').style.display = 'none';
+        document.getElementById('result-section').style.display = 'block';
+        window.scrollTo(0, 0);
+
+        const data = calculateResults();
+        const factorContainer = document.getElementById('factors-container');
+        factorContainer.innerHTML = '';
+
+        // 显示总分
+        document.getElementById('totalScoreInfo').innerHTML = 
+            `总分: <strong>${data.totalScore}</strong> (若总分超过160分，或任一因子分超过2分，建议关注心理健康)`;
+
+        // 渲染因子列表
+        for (let factor in data.factorScores) {
+            const score = data.factorScores[factor];
+            const info = getLevelInfo(score);
+            
+            const html = `
+                <div class="result-item">
+                    <div class="result-label">
+                        <span>${factor}</span>
+                        <span>
+                            <span class="score-badge" style="background:${info.color}">${info.text}</span>
+                            <span>${score}</span>
+                        </span>
+                    </div>
+                    <div class="result-bar-bg">
+                        <div class="result-bar-fill" style="width: ${info.percent}%; background-color: ${info.color};"></div>
+                    </div>
+                </div>
+            `;
+            factorContainer.innerHTML += html;
+        }
+    }
 </script>
 
 </body>
