@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>成人ADHD自填量表 (ASRS-V1.1)</title>
+    <style>
+        /* 绿色系主题样式 */
+        :root {
+            --green-primary: #4CAF50; /* 主绿色 */
+            --green-light: #E8F5E9; /* 背景浅绿色 */
+            --green-dark: #388E3C; /* 深绿色/按钮悬停 */
+            --text-color: #333;
+            --white: #fff;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --flag-color: #f44336; /* 红色标记，用于高危选项 */
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background-color: var(--green-light);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px 15px;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background-color: var(--green-primary);
+            color: var(--white);
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px var(--shadow-color);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.4em;
+        }
+
+        header p {
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .test-section {
+            background-color: var(--white);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px var(--shadow-color);
+        }
+        
+        .part-header {
+            color: var(--green-dark);
+            font-size: 1.2em;
+            border-bottom: 2px dashed var(--green-light);
+            padding-bottom: 5px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-left: 5px solid var(--green-primary);
+            background-color: #f7fcf7;
+            border-radius: 4px;
+        }
+
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.0em;
+        }
+
+        .options-group {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .option-label {
+            flex: 1 1 auto;
+            padding: 8px 5px;
+            background-color: #fff;
+            border: 1px solid var(--green-primary);
+            border-radius: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85em;
+            min-width: 50px;
+        }
+
+        input[type="radio"] {
+            display: none;
+        }
+
+        /* 选中的正常样式 */
+        input[type="radio"]:checked + .option-label {
+            background-color: var(--green-primary);
+            color: var(--white);
+            border-color: var(--green-dark);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 提交按钮 */
+        #submitBtn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-top: 30px;
+            background-color: var(--green-dark);
+            color: var(--white);
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #submitBtn:hover {
+            background-color: #2e7d32;
+        }
+
+        /* 结果展示区 */
+        #result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: var(--green-light);
+            border: 1px solid var(--green-primary);
+            display: none;
+        }
+
+        #result h2 {
+            color: var(--green-dark);
+            margin-top: 0;
+            border-bottom: 2px solid var(--green-primary);
+            padding-bottom: 10px;
+            font-size: 1.3em;
+        }
+        
+        .flag-count {
+            color: var(--flag-color);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .suggestion-box {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: var(--white);
+            border-radius: 6px;
+            border: 1px dashed var(--green-primary);
+        }
+
+        .suggestion-box h3 {
+            color: var(--green-primary);
+            margin-top: 0;
+            font-size: 1.1em;
+        }
+
+        .suggestion-box ul {
+            padding-left: 20px;
+            list-style-type: '🌿 ';
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔬 成人ADHD自填量表 (ASRS-V1.1)</h1>
+            <p>基于世卫组织与DSM标准的18题完整版筛查</p>
+        </header>
+
+        <section class="test-section">
+            <form id="adhdTestForm">
+                <div class="part-header">第一部分：核心筛查 (Q1-Q6)</div>
+
+                <div class="question" data-critical-score="4">
+                    <div class="question-text">1. 一旦完成任何计划中最具挑战的部分之后，你多常有完成计划最后细节的困难？</div>
+                    <div class="options-group" data-question-id="q1">
+                        <input type="radio" id="q1-1" name="q1" value="1"><label for="q1-1" class="option-label">1. 从不</label>
+                        <input type="radio" id="q1-2" name="q1" value="2"><label for="q1-2" class="option-label">2. 很少</label>
+                        <input type="radio" id="q1-3" name="q1" value="3"><label for="q1-3" class="option-label">3. 有时</label>
+                        <input type="radio" id="q1-4" name="q1" value="4"><label for="q1-4" class="option-label">4. 经常</label>
+                        <input type="radio" id="q1-5" name="q1" value="5"><label for="q1-5" class="option-label">5. 非常经常</label>
+                    </div>
+                </div>
+
+                <div class="question" data-critical-score="4">
+                    <div class="question-text">2. 当必须从事需要有组织规划性的任务时，你会多常有困难井然有序地去做？</div>
+                    <div class="options-group" data-question-id="q2">
+                        <input type="radio" id="q2-1" name="q2" value="1"><label for="q2-1" class="option-label">1. 从不</label>
+                        <input type="radio" id="q2-2" name="q2" value="2"><label for="q2-2" class="option-label">2. 很少</label>
+                        <input type="radio" id="q2-3" name="q2" value="3"><label for="q2-3" class="option-label">3. 有时</label>
+                        <input type="radio" id="q2-4" name="q2" value="4"><label for="q2-4" class="option-label">4. 经常</label>
+                        <input type="radio" id="q2-5" name="q2" value="5"><label for="q2-5" class="option-label">5. 非常经常</label>
+                    </div>
+                </div>
+
+                <div class="question" data-critical-score="4">
+                    <div class="question-text">3. 你会多常有困难去记得约会或是应该做的事？</div>
+                    <div class="options-group" data-question-id="q3">
+                        <input type="radio" id="q3-1" name="q3" value="1"><label for="q3-1" class="option-label">1. 从不</label>
+                        <input type="radio" id="q3-2" name="q3" value="2"><label for="q3-2" class="option-label">2. 很少</label>
+                        <input type="radio" id="q3-3" name="q3" value="3"><label for="q3-3" class="option-label">3. 有时</label>
+                        <input type="radio" id="q3-4" name="q3" value="4"><label for="q3-4" class="option-label">4. 经常</label>
+                        <input type="radio" id="q3-5" name="q3" value="5"><label for="q3-5" class="option-label">5. 非常经常</label>
+                    </div>
+                </div>
+
+                <div class="question" data-critical-score="4">
+                    <div class="question-text">4. 当有一件需要多费心思考的工作时，你会多常逃避或是延后开始去做？</div>
+                    <div class="options-group" data-question-id="q4">
+                        <input type="radio" id="q4-1" name="q4" value="1"><label for="q4-1" class="option-label">1. 从不</label>
+                        <input type="radio" id="q4-2" name="q4" value="2"><label for="q4-2" class="option-label">2. 很少</label>
+                        <input type="radio" id="q4-3" name="q4" value="3"><label for="q4-3" class="option-label">3. 有时</label>
+                        <input type="radio" id="q4-4" name="q4" value="4"><label for="q4-4" class="option-label">4. 经常</label>
+                        <input type="radio" id="q4-5" name="q4" value="5"><label for="q4-5" class="option-label">5. 非常经常</label>
+                    </div>
+                </div>
+
+                <div class="question" data-critical-score="4">
+                    <div class="question-text">5. 当你必须长时间坐着时，你会多常坐不安稳或扭动手脚？</div>
+                    <div class="options-group" data-question-id="q5">
+                        <input type="radio" id="q5-1" name="q5" value="1"><label for="q5-1" class="option-label">1. 从不</label>
+                        <input type="radio" id="q5-2" name="q5" value="2"><label for="q5-2" class="option-label">2. 很少</label>
+                        <input type="radio" id="q5-3" name="q5" value="3"><label for="q5-3" class="option-label">3. 有时</label>
+                        <input type="radio" id="q5-4" name="q5" value="4"><label for="q5-4" class="option-label">4. 经常</label>
+                        <input type="radio" id="q5-5" name="q5" value="5"><label for="q5-5" class="option-label">5. 非常经常</label>
+                    </div>
+                </div>
+
+                <div class="question" data-critical-score="4">
+                    <div class="question-text">6. 你会多常像被马达所驱动一样，觉得自己过度的活跃，不得不做事情？</div>
+                    <div class="options-group" data-question-id="q6">
+                        <input type="radio" id="q6-1" name="q6" value="1"><label for="q6-1" class="option-label">1. 从不</label>
+                        <input type="radio" id="q6-2" name="q6" value="2"><label for="q6-2" class="option-label">2. 很少</label>
+                        <input type="radio" id="q6-3" name="q6" value="3"><label for="q6-3" class="option-label">3. 有时</label>
+                        <input type="radio" id="q6-4" name="q6" value="4"><label for="q6-4" class="option-label">4. 经常</label>
+                        <input type="radio" id="q6-5" name="q6" value="5"><label for="q6-5" class="option-label">5. 非常经常</label>
+                    </div>
+                </div>
+
+                <div class="part-header">第二部分：补充症状 (Q7-Q18)</div>
+                
+                <div class="question" data-critical-score="4">
+                    <div class="question-text">7. 你多常在和别人对话时分心，没有听完对方所说的话？</div>
+                    <div class="options-group" data-question-id="q7">
+                        <input type="radio" id="q7-1" name="q7" value="1"><label for="q7-1" class="option-label">1. 从不</label>
+                        <input type="radio" id="q7-2" name="q7" value="2"><label for="q7-2" class="option-label">2. 很少</label>
+                        <input type="radio" id="q7-3" name="q7" value="3"><label for="q7-3" class="option-label">3. 有时</label>
+                        <input type="radio" id="q7-4" name="q7" value="4"><label for="q7-4" class="option-label">4. 经常</label>
+                        <input type="radio" id="q7-5" name="q7" value="5"><label for="q7-5" class="option-label">5. 非常经常</label>
+                    </div>
+                </div>
+
+                <div class="question" data-critical-score="3">
+                    <div class="question-text">8. 你多常在需要专心做事时，受到周围活动的干扰？</div>
+                    <div class="options-group" data-question-id="q8">
+                        <input type="radio" id="q8-1" name="q8" value="1"><label for="q8-1" class="option-label">1. 从不</label>
+                        <input type="radio" id="q8-2" name="q8" value="2"><label for="q8-2" class="option-label">2. 很少</label>
+                        <input type="radio" id="q8-3" name="q8" value="3"><label for="q8-3" class="option-label">3. 有时</label>
+                        <input type="radio" id="q8-4" name="q8" value="4"><label for="q8-4" class="option-label">4. 经常</label>
+                        <input type="radio" id="q8-5" name="q8" value="5"><label for="q8-5" class="option-label">5. 非常经常</label>
+                    </div>
+                </div>
+                
+                <div class="question" data-critical-score="3">
+                    <div class="question-text">9. 你多常有把事情一拖再拖的习惯？</div>
+                    <div class="options-group" data-question-id="q9">
+                        <input type="radio" id="q9-1" name="q9" value="1"><label for="q9-1" class="option-label">1. 从不</label>
+                        <input type="radio" id="q9-2" name="q9" value="2"><label for="q9-2" class="option-label">2. 很少</label>
+                        <input type="radio" id="q9-3" name="q9" value="3"><label for="q9-3" class="option-label">3. 有时</label>
+                        <input type="radio" id="q9-4" name="q9" value="4"><label for="q9-4" class="option-label">4. 经常</label>
+                        <input type="radio" id="q9-5" name="q9" value="5"><label for="q9-5" class="option-label">5. 非常经常</label>
+                    </div>
+                </div>
+
+                <div class="question" data-critical-score="3">
+                    <div class="question-text">10. 你多常在非预期的情况下离开你的座位？</div>
+                    <div class="options-group" data-question-id="q10">
+                        <input type="radio" id="q10-1" name="q10" value="1"><label for="q10-1" class="option-label">1. 从不</label>
+                        <input type="radio" id="q10-2" name="q10" value="2"><label for="q10-2" class="option-label">2. 很少</label>
+                        <input type="radio" id="q10-3" name="q10" value="3"><label for="q10-3" class="option-label">3. 有时</label>
+                        <input type="radio" id="q10-4" name="q10" value="4"><label for="q10-4" class="option-label">4. 经常</label>
+                        <input type="radio" id="q10-5" name="q10" value="5"><label for="q10-5" class="option-label">5. 非常经常</label>
+                    </div>
+                </div>
+
+                <div class="question" data-critical-score="4">
+                    <div class="question-text">11. 你多常觉得急躁，想要去做一些事情？</div>
+                    <div class="options-group" data-question-id="q11">
+                        <input type="radio" id="q11-1" name="q11" value="1"><label for="q11-1" class="option-label">1. 从不</label>
+                        <input type="radio" id="q11-2" name="q11" value="2"><label for="q11-2" class="option-label">2. 很少</label>
+                        <input type="radio" id="q11-3" name="q11" value="3"><label for="q11-3" class="option-label">3. 有时</label>
+                        <input type="radio" id="q11-4" name="q11" value="4"><label for="q11-4" class="option-label">4. 经常</label>
+                        <input type="radio" id="q11-5" name="q11" value="5"><label for="q11-5" class="option-label">5. 非常经常</label>
+                    </div>
+                </div>
+
+                <div class="question" data-critical-score="3">
+                    <div class="question-text">12. 你多常有在不适当的时候说话或打断别人的习惯？</div>
+                    <div class="options-group" data-question-id="q12">
+                        <input type="radio" id="q12-1" name="q12" value="1"><label for="q12-1" class="option-label">1. 从不</label>
+                        <input type="radio" id="q12-2" name="q12" value="2"><label for="q12-2" class="option-label">2. 很少</label>
+                        <input type="radio" id="q12-3" name="q12" value="3"><label for="q12-3" class="option-label">3. 有时</label>
+                        <input type="radio" id="q12-4" name="q12" value="4"><label for="q12-4" class="option-label">4. 经常</label>
+                        <input type="radio" id="q12-5" name="q12" value="5"><label for="q12-5" class="option-label">5. 非常经常</label>
+                    </div>
+                </div>
+
+                <div class="question" data-critical-score="3">
+                    <div class="question-text">13. 你多常在不该说话的时候插话或打断别人？</div>
+                    <div class="options-group" data-question-id="q13">
+                        <input type="radio" id="q13-1" name="q13" value="1"><label for="q13-1" class="option-label">1. 从不</label>
+                        <input type="radio" id="q13-2" name="q13" value="2"><label for="q13-2" class="option-label">2. 很少</label>
+                        <input type="radio" id="q13-3" name="q13" value="3"><label for="q13-3" class="option-label">3. 有时</label>
+                        <input type="radio" id="q13-4" name="q13" value="4"><label for="q13-4" class="option-label">4. 经常</label>
+                        <input type="radio" id="q13-5" name="q13" value="5"><label for="q13-5" class="option-label">5. 非常经常</label>
+                    </div>
+                </div>
+
+                <div class="question" data-critical-score="3">
+                    <div class="question-text">14. 你多常在玩娱乐活动时，很难保持安静？</div>
+                    <div class="options-group" data-question-id="q14">
+                        <input type="radio" id="q14-1" name="q14" value="1"><label for="q14-1" class="option-label">1. 从不</label>
+                        <input type="radio" id="q14-2" name="q14" value="2"><label for="q14-2" class="option-label">2. 很少</label>
+                        <input type="radio" id="q14-3" name="q14" value="3"><label for="q14-3" class="option-label">3. 有时</label>
+                        <input type="radio" id="q14-4" name="q14" value="4"><label for="q14-4" class="option-label">4. 经常</label>
+                        <input type="radio" id="q14-5" name="q14" value="5"><label for="q14-5" class="option-label">5. 非常经常</label>
+                    </div>
+                </div>
+
+                <div class="question" data-critical-score="3">
+                    <div class="question-text">15. 你多常在等待时显得不耐烦？</div>
+                    <div class="options-group" data-question-id="q15">
+                        <input type="radio" id="q15-1" name="q15" value="1"><label for="q15-1" class="option-label">1. 从不</label>
+                        <input type="radio" id="q15-2" name="q15" value="2"><label for="q15-2" class="option-label">2. 很少</label>
+                        <input type="radio" id="q15-3" name="q15" value="3"><label for="q15-3" class="option-label">3. 有时</label>
+                        <input type="radio" id="q15-4" name="q15" value="4"><label for="q15-4" class="option-label">4. 经常</label>
+                        <input type="radio" id="q15-5" name="q15" value="5"><label for="q15-5" class="option-label">5. 非常经常</label>
+                    </div>
+                </div>
+
+                <div class="question" data-critical-score="4">
+                    <div class="question-text">16. 你多常有在完成任务或事情前就转换到另一个的习惯？</div>
+                    <div class="options-group" data-question-id="q16">
+                        <input type="radio" id="q16-1" name="q16" value="1"><label for="q16-1" class="option-label">1. 从不</label>
+                        <input type="radio" id="q16-2" name="q16" value="2"><label for="q16-2" class="option-label">2. 很少</label>
+                        <input type="radio" id="q16-3" name="q16" value="3"><label for="q16-3" class="option-label">3. 有时</label>
+                        <input type="radio" id="q16-4" name="q16" value="4"><label for="q16-4" class="option-label">4. 经常</label>
+                        <input type="radio" id="q16-5" name="q16" value="5"><label for="q16-5" class="option-label">5. 非常经常</label>
+                    </div>
+                </div>
+
+                <div class="question" data-critical-score="3">
+                    <div class="question-text">17. 你多常有因为过于冲动而在财务上或行为上发生失误？</div>
+                    <div class="options-group" data-question-id="q17">
+                        <input type="radio" id="q17-1" name="q17" value="1"><label for="q17-1" class="option-label">1. 从不</label>
+                        <input type="radio" id="q17-2" name="q17" value="2"><label for="q17-2" class="option-label">2. 很少</label>
+                        <input type="radio" id="q17-3" name="q17" value="3"><label for="q17-3" class="option-label">3. 有时</label>
+                        <input type="radio" id="q17-4" name="q17" value="4"><label for="q17-4" class="option-label">4. 经常</label>
+                        <input type="radio" id="q17-5" name="q17" value="5"><label for="q17-5" class="option-label">5. 非常经常</label>
+                    </div>
+                </div>
+
+                <div class="question" data-critical-score="3">
+                    <div class="question-text">18. 你多常有难以完成你开始的工作的习惯？</div>
+                    <div class="options-group" data-question-id="q18">
+                        <input type="radio" id="q18-1" name="q18" value="1"><label for="q18-1" class="option-label">1. 从不</label>
+                        <input type="radio" id="q18-2" name="q18" value="2"><label for="q18-2" class="option-label">2. 很少</label>
+                        <input type="radio" id="q18-3" name="q18" value="3"><label for="q18-3" class="option-label">3. 有时</label>
+                        <input type="radio" id="q18-4" name="q18" value="4"><label for="q18-4" class="option-label">4. 经常</label>
+                        <input type="radio" id="q18-5" name="q18" value="5"><label for="q18-5" class="option-label">5. 非常经常</label>
+                    </div>
+                </div>
+                
+                <button type="submit" id="submitBtn">查看筛查结果</button>
+            </form>
+
+            <div id="result">
+                </div>
+        </section>
+    </div>
+
+    <script>
+        document.getElementById('adhdTestForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            let questionsAnswered = 0;
+            let partAFlagCount = 0;
+            const numQuestions = 18;
+            const form = event.target;
+            const resultDiv = document.getElementById('result');
+
+            // 1. 检查所有题目是否回答
+            for (let i = 1; i <= numQuestions; i++) {
+                if (form.elements['q' + i].value) {
+                    questionsAnswered++;
+                }
+            }
+
+            if (questionsAnswered < numQuestions) {
+                resultDiv.innerHTML = '<h2>⚠️ 提示</h2><p>请完成所有18道题目再查看结果。</p>';
+                resultDiv.style.display = 'block';
+                resultDiv.scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+
+            // 2. ASRS-V1.1 核心筛查逻辑 (检查 Q1-Q6 的评分)
+            const criticalScores = [4, 4, 4, 4, 4, 4]; // Q1-Q6 的临界分都是 4 (经常)
+            for (let i = 1; i <= 6; i++) {
+                const score = parseInt(form.elements['q' + i].value, 10);
+                if (score >= criticalScores[i - 1]) {
+                    partAFlagCount++;
+                }
+            }
+            
+            let resultTitle, resultDescription, suggestionsHtml;
+
+            // 3. 根据 ASRS-V1.1 标准解释结果：Part A 中至少有 4 个标记项
+            if (partAFlagCount >= 4) {
+                resultTitle = '🚨 高度风险 / 建议临床评估';
+                resultDescription = `在核心筛查部分（Q1-Q6）中，您的临界项（得分 4 或 5）数量为 ${partAFlagCount} 个。根据ASRS-V1.1的筛查标准，这表明您存在成人ADHD的可能性较高。`;
+                suggestionsHtml = `
+                    <h3>🌲 后续建议</h3>
+                    <ul>
+                        <li>寻求专业评估：强烈建议您将此结果作为参考，尽快咨询精神科医生或专业的临床心理师，进行详细的临床访谈和诊断。</li>
+                        <li>不要自行诊断：请记住，筛查表不能替代专业的医疗诊断。</li>
+                        <li>症状管理：在专业指导下，学习时间管理、环境结构化等应对策略，帮助减轻日常生活中的困扰。</li>
+                    </ul>
+                `;
+            } else if (partAFlagCount >= 2) {
+                resultTitle = '💡 中等风险 / 保持关注';
+                resultDescription = `在核心筛查部分（Q1-Q6）中，您的临界项（得分 4 或 5）数量为 ${partAFlagCount} 个。虽然未达到高风险的阈值，但这些症状可能表明您在注意力或多动冲动方面存在一些困扰。`;
+                suggestionsHtml = `
+                    <h3>🌿 提升建议</h3>
+                    <ul>
+                        <li>自我观察：仔细观察这些症状是否影响了您的学业、工作或社交生活。</li>
+                        <li>基础策略：尝试使用日历、清单、番茄工作法等工具来加强执行功能。</li>
+                        <li>如有疑虑：如果症状持续存在并严重影响生活，仍建议咨询专业人士以排除其他可能原因。</li>
+                    </ul>
+                `;
+            } else {
+                resultTitle = '✅ 风险较低 / 症状不典型';
+                resultDescription = `在核心筛查部分（Q1-Q6）中，您的临界项（得分 4 或 5）数量为 ${partAFlagCount} 个。您的自评结果表明您不符合成人ADHD筛查的高风险标准。`;
+                suggestionsHtml = `
+                    <h3>🌱 巩固建议</h3>
+                    <ul>
+                        <li>放松心态：不必过度担心ADHD，您的日常困扰可能来源于压力或习惯。</li>
+                        <li>提升效率：如果仍有拖延或分心等困扰，可以关注时间管理和情绪调节技巧。</li>
+                    </ul>
+                `;
+            }
+
+            // 4. 填充结果内容
+            resultDiv.innerHTML = `
+                <h2>📊 ASRS-V1.1 筛查结果</h2>
+                <p>核心筛查部分（Q1-Q6）临界项数量：<span class="flag-count">${partAFlagCount}</span> 个 (临界阈值为 4)</p>
+                <p><strong>筛查结论：</strong> ${resultTitle}</p>
+                <p>${resultDescription}</p>
+                <div class="suggestion-box">${suggestionsHtml}</div>
+                <p style="font-size: 0.8em; margin-top: 20px; color: #666;">免责声明：本工具仅为ASRS-V1.1的电子化版本，其结果仅供自我参考，不具备医疗诊断效力。</p>
+            `;
+            
+            resultDiv.style.display = 'block';
+            resultDiv.scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
