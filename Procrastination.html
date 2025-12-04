@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拖延症自测表 (15题)</title>
+    <style>
+        /* 绿色系主题样式 */
+        :root {
+            --green-primary: #4CAF50; /* 主绿色 */
+            --green-light: #E8F5E9; /* 背景浅绿色 */
+            --green-dark: #388E3C; /* 深绿色/按钮悬停 */
+            --text-color: #333;
+            --white: #fff;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background-color: var(--green-light);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px 15px;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background-color: var(--green-primary);
+            color: var(--white);
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px var(--shadow-color);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        .test-section {
+            background-color: var(--white);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px var(--shadow-color);
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 15px;
+            border-left: 5px solid var(--green-primary);
+            background-color: #f7fcf7;
+            border-radius: 4px;
+        }
+
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .options-group {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .option-label {
+            flex: 1 1 auto;
+            padding: 8px 5px;
+            background-color: #fff;
+            border: 1px solid var(--green-primary);
+            border-radius: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9em;
+            min-width: 50px;
+        }
+
+        .option-label:hover {
+            background-color: #e6ffe6;
+        }
+
+        input[type="radio"] {
+            display: none;
+        }
+
+        input[type="radio"]:checked + .option-label {
+            background-color: var(--green-primary);
+            color: var(--white);
+            border-color: var(--green-dark);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* 提交按钮 */
+        #submitBtn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-top: 30px;
+            background-color: var(--green-dark);
+            color: var(--white);
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #submitBtn:hover {
+            background-color: #2e7d32;
+        }
+
+        /* 结果展示区 */
+        #result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: var(--green-light);
+            border: 1px solid var(--green-primary);
+            display: none;
+        }
+
+        #result h2 {
+            color: var(--green-dark);
+            margin-top: 0;
+            border-bottom: 2px solid var(--green-primary);
+            padding-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        #result p {
+            margin-bottom: 10px;
+        }
+
+        .suggestion-box {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: var(--white);
+            border-radius: 6px;
+            border: 1px dashed var(--green-primary);
+        }
+
+        .suggestion-box h3 {
+            color: var(--green-primary);
+            margin-top: 0;
+            font-size: 1.1em;
+        }
+
+        .suggestion-box ul {
+            padding-left: 20px;
+            list-style-type: '🌿 ';
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💡 拖延症自我倾向测试</h1>
+            <p>基于行为和感受的快速评估（15题）</p>
+        </header>
+
+        <section class="test-section">
+            <form id="procrastinationTestForm">
+                <div class="question">
+                    <div class="question-text">1. 我倾向于等到最后一刻才开始完成重要任务，即便时间充足。</div>
+                    <div class="options-group" data-question-id="q1">
+                        <input type="radio" id="q1-1" name="q1" value="1"><label for="q1-1" class="option-label">完全不符合</label>
+                        <input type="radio" id="q1-2" name="q1" value="2"><label for="q1-2" class="option-label">不太符合</label>
+                        <input type="radio" id="q1-3" name="q1" value="3"><label for="q1-3" class="option-label">一般</label>
+                        <input type="radio" id="q1-4" name="q1" value="4"><label for="q1-4" class="option-label">比较符合</label>
+                        <input type="radio" id="q1-5" name="q1" value="5"><label for="q1-5" class="option-label">完全符合</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">2. 我经常用浏览社交媒体、看视频等活动来逃避必须完成的工作。</div>
+                    <div class="options-group" data-question-id="q2">
+                        <input type="radio" id="q2-1" name="q2" value="1"><label for="q2-1" class="option-label">完全不符合</label>
+                        <input type="radio" id="q2-2" name="q2" value="2"><label for="q2-2" class="option-label">不太符合</label>
+                        <input type="radio" id="q2-3" name="q2" value="3"><label for="q2-3" class="option-label">一般</label>
+                        <input type="radio" id="q2-4" name="q2" value="4"><label for="q2-4" class="option-label">比较符合</label>
+                        <input type="radio" id="q2-5" name="q2" value="5"><label for="q2-5" class="option-label">完全符合</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">3. 面对一个大型或复杂的任务时，我常常不知所措，不知道从何开始。</div>
+                    <div class="options-group" data-question-id="q3">
+                        <input type="radio" id="q3-1" name="q3" value="1"><label for="q3-1" class="option-label">完全不符合</label>
+                        <input type="radio" id="q3-2" name="q3" value="2"><label for="q3-2" class="option-label">不太符合</label>
+                        <input type="radio" id="q3-3" name="q3" value="3"><label for="q3-3" class="option-label">一般</label>
+                        <input type="radio" id="q3-4" name="q3" value="4"><label for="q3-4" class="option-label">比较符合</label>
+                        <input type="radio" id="q3-5" name="q3" value="5"><label for="q3-5" class="option-label">完全符合</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">4. 我会因为担心结果不够完美而推迟开始一个项目。</div>
+                    <div class="options-group" data-question-id="q4">
+                        <input type="radio" id="q4-1" name="q4" value="1"><label for="q4-1" class="option-label">完全不符合</label>
+                        <input type="radio" id="q4-2" name="q4" value="2"><label for="q4-2" class="option-label">不太符合</label>
+                        <input type="radio" id="q4-3" name="q4" value="3"><label for="q4-3" class="option-label">一般</label>
+                        <input type="radio" id="q4-4" name="q4" value="4"><label for="q4-4" class="option-label">比较符合</label>
+                        <input type="radio" id="q4-5" name="q4" value="5"><label for="q4-5" class="option-label">完全符合</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">5. 当我需要做一些无趣或困难的事情时，我总是先找一些容易或有趣的小事来做。</div>
+                    <div class="options-group" data-question-id="q5">
+                        <input type="radio" id="q5-1" name="q5" value="1"><label for="q5-1" class="option-label">完全不符合</label>
+                        <input type="radio" id="q5-2" name="q5" value="2"><label for="q5-2" class="option-label">不太符合</label>
+                        <input type="radio" id="q5-3" name="q5" value="3"><label for="q5-3" class="option-label">一般</label>
+                        <input type="radio" id="q5-4" name="q5" value="4"><label for="q5-4" class="option-label">比较符合</label>
+                        <input type="radio" id="q5-5" name="q5" value="5"><label for="q5-5" class="option-label">完全符合</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">6. 我经常低估完成任务所需的时间，导致最后手忙脚乱。</div>
+                    <div class="options-group" data-question-id="q6">
+                        <input type="radio" id="q6-1" name="q6" value="1"><label for="q6-1" class="option-label">完全不符合</label>
+                        <input type="radio" id="q6-2" name="q6" value="2"><label for="q6-2" class="option-label">不太符合</label>
+                        <input type="radio" id="q6-3" name="q6" value="3"><label for="q6-3" class="option-label">一般</label>
+                        <input type="radio" id="q6-4" name="q6" value="4"><label for="q6-4" class="option-label">比较符合</label>
+                        <input type="radio" id="q6-5" name="q6" value="5"><label for="q6-5" class="option-label">完全符合</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">7. 我发现自己很难对没有明确截止日期的任务保持专注和积极性。</div>
+                    <div class="options-group" data-question-id="q7">
+                        <input type="radio" id="q7-1" name="q7" value="1"><label for="q7-1" class="option-label">完全不符合</label>
+                        <input type="radio" id="q7-2" name="q7" value="2"><label for="q7-2" class="option-label">不太符合</label>
+                        <input type="radio" id="q7-3" name="q7" value="3"><label for="q7-3" class="option-label">一般</label>
+                        <input type="radio" id="q7-4" name="q7" value="4"><label for="q7-4" class="option-label">比较符合</label>
+                        <input type="radio" id="q7-5" name="q7" value="5"><label for="q7-5" class="option-label">完全符合</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">8. 当我感到压力或情绪不佳时，我更可能选择拖延而非立即处理任务。</div>
+                    <div class="options-group" data-question-id="q8">
+                        <input type="radio" id="q8-1" name="q8" value="1"><label for="q8-1" class="option-label">完全不符合</label>
+                        <input type="radio" id="q8-2" name="q8" value="2"><label for="q8-2" class="option-label">不太符合</label>
+                        <input type="radio" id="q8-3" name="q8" value="3"><label for="q8-3" class="option-label">一般</label>
+                        <input type="radio" id="q8-4" name="q8" value="4"><label for="q8-4" class="option-label">比较符合</label>
+                        <input type="radio" id="q8-5" name="q8" value="5"><label for="q8-5" class="option-label">完全符合</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">9. 我常在心中反复计划一个任务，但很少付诸行动。</div>
+                    <div class="options-group" data-question-id="q9">
+                        <input type="radio" id="q9-1" name="q9" value="1"><label for="q9-1" class="option-label">完全不符合</label>
+                        <input type="radio" id="q9-2" name="q9" value="2"><label for="q9-2" class="option-label">不太符合</label>
+                        <input type="radio" id="q9-3" name="q9" value="3"><label for="q9-3" class="option-label">一般</label>
+                        <input type="radio" id="q9-4" name="q9" value="4"><label for="q9-4" class="option-label">比较符合</label>
+                        <input type="radio" id="q9-5" name="q9" value="5"><label for="q9-5" class="option-label">完全符合</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">10. 任务完成后，我常感到遗憾，如果早点开始就能做得更好。</div>
+                    <div class="options-group" data-question-id="q10">
+                        <input type="radio" id="q10-1" name="q10" value="1"><label for="q10-1" class="option-label">完全不符合</label>
+                        <input type="radio" id="q10-2" name="q10" value="2"><label for="q10-2" class="option-label">不太符合</label>
+                        <input type="radio" id="q10-3" name="q10" value="3"><label for="q10-3" class="option-label">一般</label>
+                        <input type="radio" id="q10-4" name="q10" value="4"><label for="q10-4" class="option-label">比较符合</label>
+                        <input type="radio" id="q10-5" name="q10" value="5"><label for="q10-5" class="option-label">完全符合</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">11. 我常常因为任务的模糊性或缺乏具体指示而迟迟不开始。</div>
+                    <div class="options-group" data-question-id="q11">
+                        <input type="radio" id="q11-1" name="q11" value="1"><label for="q11-1" class="option-label">完全不符合</label>
+                        <input type="radio" id="q11-2" name="q11" value="2"><label for="q11-2" class="option-label">不太符合</label>
+                        <input type="radio" id="q11-3" name="q11" value="3"><label for="q11-3" class="option-label">一般</label>
+                        <input type="radio" id="q11-4" name="q11" value="4"><label for="q11-4" class="option-label">比较符合</label>
+                        <input type="radio" id="q11-5" name="q11" value="5"><label for="q11-5" class="option-label">完全符合</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">12. 即使我没有在做正事，我也经常感到焦虑和内疚。</div>
+                    <div class="options-group" data-question-id="q12">
+                        <input type="radio" id="q12-1" name="q12" value="1"><label for="q12-1" class="option-label">完全不符合</label>
+                        <input type="radio" id="q12-2" name="q12" value="2"><label for="q12-2" class="option-label">不太符合</label>
+                        <input type="radio" id="q12-3" name="q12" value="3"><label for="q12-3" class="option-label">一般</label>
+                        <input type="radio" id="q12-4" name="q12" value="4"><label for="q12-4" class="option-label">比较符合</label>
+                        <input type="radio" id="q12-5" name="q12" value="5"><label for="q12-5" class="option-label">完全符合</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">13. 我会选择做一些“生产力假象”的事情（例如整理文件、回复不紧急的邮件），来避免真正的困难任务。</div>
+                    <div class="options-group" data-question-id="q13">
+                        <input type="radio" id="q13-1" name="q13" value="1"><label for="q13-1" class="option-label">完全不符合</label>
+                        <input type="radio" id="q13-2" name="q13" value="2"><label for="q13-2" class="option-label">不太符合</label>
+                        <input type="radio" id="q13-3" name="q13" value="3"><label for="q13-3" class="option-label">一般</label>
+                        <input type="radio" id="q13-4" name="q13" value="4"><label for="q13-4" class="option-label">比较符合</label>
+                        <input type="radio" id="q13-5" name="q13" value="5"><label for="q13-5" class="option-label">完全符合</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">14. 我很难拒绝新的邀请或任务，导致我的待办清单不断膨胀。</div>
+                    <div class="options-group" data-question-id="q14">
+                        <input type="radio" id="q14-1" name="q14" value="1"><label for="q14-1" class="option-label">完全不符合</label>
+                        <input type="radio" id="q14-2" name="q14" value="2"><label for="q14-2" class="option-label">不太符合</label>
+                        <input type="radio" id="q14-3" name="q14" value="3"><label for="q14-3" class="option-label">一般</label>
+                        <input type="radio" id="q14-4" name="q14" value="4"><label for="q14-4" class="option-label">比较符合</label>
+                        <input type="radio" id="q14-5" name="q14" value="5"><label for="q14-5" class="option-label">完全符合</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">15. 我倾向于在晚上或深夜才感到有动力工作，即使这会牺牲我的睡眠。</div>
+                    <div class="options-group" data-question-id="q15">
+                        <input type="radio" id="q15-1" name="q15" value="1"><label for="q15-1" class="option-label">完全不符合</label>
+                        <input type="radio" id="q15-2" name="q15" value="2"><label for="q15-2" class="option-label">不太符合</label>
+                        <input type="radio" id="q15-3" name="q15" value="3"><label for="q15-3" class="option-label">一般</label>
+                        <input type="radio" id="q15-4" name="q15" value="4"><label for="q15-4" class="option-label">比较符合</label>
+                        <input type="radio" id="q15-5" name="q15" value="5"><label for="q15-5" class="option-label">完全符合</label>
+                    </div>
+                </div>
+
+
+                <button type="submit" id="submitBtn">查看我的拖延倾向</button>
+            </form>
+
+            <div id="result">
+                </div>
+        </section>
+    </div>
+
+    <script>
+        document.getElementById('procrastinationTestForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            let totalScore = 0;
+            let questionsAnswered = 0;
+            const numQuestions = 15; // 题目总数更新为15
+            const form = event.target;
+
+            // 计算总分
+            for (let i = 1; i <= numQuestions; i++) {
+                const qName = 'q' + i;
+                const selectedOption = form.elements[qName].value;
+                if (selectedOption) {
+                    totalScore += parseInt(selectedOption, 10);
+                    questionsAnswered++;
+                }
+            }
+
+            const resultDiv = document.getElementById('result');
+
+            // 检查是否所有题目都已回答
+            if (questionsAnswered < numQuestions) {
+                resultDiv.innerHTML = '<h2>⚠️ 提示</h2><p>请完成所有15道题目再查看结果。</p>';
+                resultDiv.style.display = 'block';
+                resultDiv.scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+
+            let resultTitle, resultDescription, suggestionsHtml;
+            const maxScore = 75; // 15 * 5
+
+            // 根据新的总分范围进行评估
+            if (totalScore <= 30) { // 15 - 30 (低拖延倾向)
+                resultTitle = '✅ 倾向：行动派 / 目标明确';
+                resultDescription = `总分 ${totalScore} 分 (满分 ${maxScore} 分)。您的拖延倾向极低。您通常能很好地管理时间，及时启动和完成任务。`;
+                suggestionsHtml = `
+                    <h3>🌱 巩固建议</h3>
+                    <ul>
+                        <li>继续保持：保持当前良好的习惯和自我驱动力。</li>
+                        <li>弹性调整：允许自己偶尔放松，避免完美主义带来的过度压力。</li>
+                        <li>高效提升：探索更高级的时间管理技巧（如GTD），进一步优化流程。</li>
+                    </ul>
+                `;
+            } else if (totalScore <= 55) { // 31 - 55 (中度拖延倾向)
+                resultTitle = '💡 倾向：偶有拖延 / 警觉区';
+                resultDescription = `总分 ${totalScore} 分 (满分 ${maxScore} 分)。您有中度的拖延倾向，可能在面对特定困难或无趣任务时出现。任务进度通常在努力下能完成，但过程较为煎熬。`;
+                suggestionsHtml = `
+                    <h3>🌿 提升建议</h3>
+                    <ul>
+                        <li>分解任务：将大型任务拆分成容易开始的“五分钟行动”，降低启动门槛。</li>
+                        <li>定时工作：尝试番茄工作法（如工作25分钟，休息5分钟），保持专注。</li>
+                        <li>情绪觉察：注意拖延背后的情绪原因（如焦虑、恐惧），对冲动行为保持警惕。</li>
+                        <li>环境优化：使用软件或工具屏蔽工作时期的干扰（如社交媒体、视频）。</li>
+                    </ul>
+                `;
+            } else { // totalScore >= 56 (严重拖延倾向)
+                resultTitle = '🚨 倾向：严重拖延 / 需积极干预';
+                resultDescription = `总分 ${totalScore} 分 (满分 ${maxScore} 分)。您表现出较为强烈的拖延倾向。这可能已经对您的学业、工作或个人生活造成了实质性的负面影响。`;
+                suggestionsHtml = `
+                    <h3>🌲 积极干预建议</h3>
+                    <ul>
+                        <li>情境控制：将工作环境和娱乐环境分离，移除手机、游戏等干扰源。</li>
+                        <li>设定小目标：不要追求完美，先完成一个“丑陋的初稿”，有了开始就有了一切。</li>
+                        <li>利用“诱惑捆绑”：将一项想做的活动（如听播客）与一项需要做的任务（如做家务）结合起来。</li>
+                        <li>寻求支持：考虑与朋友、导师建立问责机制，或寻求专业心理咨询的帮助，探讨更深层的拖延原因。</li>
+                    </ul>
+                `;
+            }
+
+            // 填充结果内容
+            resultDiv.innerHTML = `
+                <h2>📊 测试结果分析</h2>
+                <p><strong>您的总得分：</strong> ${totalScore} 分 (满分 ${maxScore} 分)</p>
+                <p><strong>评估结论：</strong> ${resultTitle}</p>
+                <p>${resultDescription}</p>
+                <div class="suggestion-box">${suggestionsHtml}</div>
+            `;
+            
+            resultDiv.style.display = 'block';
+            
+            // 滚动到结果区域
+            resultDiv.scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
