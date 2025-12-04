@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>双相情感障碍自测问卷</title>
+    <style>
+        /* 暖色系配色方案 */
+        :root {
+            --main-bg: #FFF8F0; /* 浅暖米白 */
+            --header-bg: #FFC0CB; /* 浅粉色/樱花粉 */
+            --primary-color: #FF69B4; /* 暖粉色/亮粉色 */
+            --accent-color: #FFA07A; /* 浅橙色/鲑鱼色 */
+            --text-color: #333333; /* 黑色字体 */
+            --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: var(--main-bg);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            /* 确保在移动设备上全屏显示，无横向滚动 */
+            overflow-x: hidden; 
+        }
+
+        .container {
+            /* 适应移动端宽度，最大宽度设为600px */
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 15px; /* 调整内边距适应移动端 */
+        }
+
+        header {
+            background-color: var(--header-bg);
+            padding: 30px 20px;
+            text-align: center;
+            border-radius: 0 0 15px 15px;
+            box-shadow: var(--box-shadow);
+        }
+
+        header h1 {
+            color: white;
+            font-size: 1.5em;
+            margin: 0;
+        }
+
+        .brain-icon {
+            font-size: 2.5em;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .section-box {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0; /* 调整外边距适应移动端 */
+            box-shadow: var(--box-shadow);
+        }
+
+        .alert-box {
+            background-color: #FFF3CD; 
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 5px solid #FFC107;
+            font-size: 0.9em;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 5px;
+            margin-top: 0;
+            font-size: 1.2em;
+        }
+
+        .question-group {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #eee;
+        }
+
+        .question-group:last-child {
+            border-bottom: none;
+        }
+
+        .question-group strong {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--text-color); /* 题目使用黑色 */
+            font-weight: normal; 
+        }
+        
+        .question-group strong {
+            font-weight: normal; 
+        }
+
+        .question-group label {
+            display: block;
+            background-color: var(--main-bg);
+            border: 1px solid #FFDAB9; 
+            border-radius: 5px;
+            padding: 12px;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .question-group label:hover {
+            background-color: #FFEEF4; 
+        }
+
+        .question-group input[type="radio"] {
+            margin-right: 10px;
+            accent-color: var(--primary-color);
+        }
+
+        /* 结果展示样式 */
+        #results {
+            display: none;
+            text-align: center;
+            padding: 30px 20px; /* 调整内边距适应移动端 */
+        }
+
+        .result-score {
+            font-size: 3em;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 10px 0;
+        }
+
+        .result-level {
+            font-size: 1.5em;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .professional-advice {
+            background-color: #E6F3FF;
+            border-left: 5px solid #1E90FF;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+            text-align: left;
+        }
+        
+        /* 保持建议标题为粗体，内容为普通字体 */
+        .professional-advice p {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .professional-advice ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .professional-advice li::before {
+            content: '💡';
+            margin-right: 8px;
+        }
+        /* 确保建议列表项内容不是粗体 */
+        .professional-advice li {
+            font-weight: normal; 
+        }
+
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border-radius: 25px;
+            width: 100%;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #E05A9D;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="brain-icon">🧠</div>
+        <h1>双相情感障碍自测问卷</h1>
+        <p style="color: white; font-size: 0.9em; margin-top: 5px;">了解您的情绪波动，关注心理健康</p>
+    </header>
+
+    <div class="section-box">
+        <div class="alert-box">
+            <strong>⚠️ 重要声明：</strong>
+            本测试仅供自我了解和参考使用，不能替代专业医疗诊断。如果您怀疑自己可能有双相情感障碍或其他心理健康问题，请务必咨询专业的精神科医生或心理健康专家。
+        </div>
+
+        <h2>什么是双相情感障碍？</h2>
+        <p style="font-size: 0.9em;">
+            双相情感障碍（Bipolar Disorder），也称为躁郁症，是一种情绪障碍，患者会经历躁狂发作（情绪极度高涨、精力充沛）和抑郁发作（情绪低落、失去兴趣）的周期性变化。
+        </p>
+
+        <h2>测试说明</h2>
+        <p style="font-size: 0.9em;">
+            本测试包含 13 道问题，涵盖情绪、行为和睡眠等多个方面。请根据您在过去一个月内的真实感受诚实作答。
+        </p>
+    </div>
+
+    <form id="quizForm" class="section-box">
+        <h2>📝 问卷</h2>
+
+        <div class="question-group" data-score="1">
+            <strong>1. 情绪高涨：您是否曾有一段时间感觉异常开心、兴奋或精力充沛，以至于周围的人说您和平时不一样？</strong>
+            <label><input type="radio" name="q1" value="1" required> 是</label>
+            <label><input type="radio" name="q1" value="0"> 否</label>
+        </div>
+
+        <div class="question-group" data-score="1">
+            <strong>2. 自信/自负：在那段时间里，您是否变得更加自信或自负，觉得无所不能？</strong>
+            <label><input type="radio" name="q2" value="1" required> 是</label>
+            <label><input type="radio" name="q2" value="0"> 否</label>
+        </div>
+
+        <div class="question-group" data-score="1">
+            <strong>3. 睡眠减少：您的睡眠需求是否明显减少（比平时少睡几小时但却不觉得累）？</strong>
+            <label><input type="radio" name="q3" value="1" required> 是</label>
+            <label><input type="radio" name="q3" value="0"> 否</label>
+        </div>
+
+        <div class="question-group" data-score="1">
+            <strong>4. 健谈/话多：您是否比平时更健谈，或感觉说话停不下来？</strong>
+            <label><input type="radio" name="q4" value="1" required> 是</label>
+            <label><input type="radio" name="q4" value="0"> 否</label>
+        </div>
+
+        <div class="question-group" data-score="1">
+            <strong>5. 思维奔逸：您是否感觉思绪转得飞快，像赛车一样在脑中闪过（思维奔逸或意念飞扬）？</strong>
+            <label><input type="radio" name="q5" value="1" required> 是</label>
+            <label><input type="radio" name="q5" value="0"> 否</label>
+        </div>
+
+        <div class="question-group" data-score="1">
+            <strong>6. 注意力分散：您是否容易分心，无法专注于一件事？</strong>
+            <label><input type="radio" name="q6" value="1" required> 是</label>
+            <label><input type="radio" name="q6" value="0"> 否</label>
+        </div>
+
+        <div class="question-group" data-score="1">
+            <strong>7. 活动增加：您是否感到精力充沛、活动量增加，或参与一些危险/冲动的活动（如鲁莽投资、过度消费、不安全性行为）？</strong>
+            <label><input type="radio" name="q7" value="1" required> 是</label>
+            <label><input type="radio" name="q7" value="0"> 否</label>
+        </div>
+
+        <div class="question-group" data-score="1">
+            <strong>8. 情绪低落：您是否曾有一段时间感到情绪持续低落、悲伤或空虚？</strong>
+            <label><input type="radio" name="q8" value="1" required> 是</label>
+            <label><input type="radio" name="q8" value="0"> 否</label>
+        </div>
+
+        <div class="question-group" data-score="1">
+            <strong>9. 兴趣丧失：您对大部分活动（包括您平时喜欢的活动）都失去兴趣或快乐感？</strong>
+            <label><input type="radio" name="q9" value="1" required> 是</label>
+            <label><input type="radio" name="q9" value="0"> 否</label>
+        </div>
+
+        <div class="question-group" data-score="1">
+            <strong>10. 精力不足：您是否感到疲劳或缺乏精力，做什么事都提不起劲？</strong>
+            <label><input type="radio" name="q10" value="1" required> 是</label>
+            <label><input type="radio" name="q10" value="0"> 否</label>
+        </div>
+
+        <div class="question-group" data-score="1">
+            <strong>11. 价值感低：您是否感到自己没有价值，或有过度、不恰当的负罪感？</strong>
+            <label><input type="radio" name="q11" value="1" required> 是</label>
+            <label><input type="radio" name="q11" value="0"> 否</label>
+        </div>
+
+        <div class="question-group" data-score="1">
+            <strong>12. 注意力/决策力：您是否发现自己思考或集中注意力困难，或者难以做决定？</strong>
+            <label><input type="radio" name="q12" value="1" required> 是</label>
+            <label><input type="radio" name="q12" value="0"> 否</label>
+        </div>
+
+        <div class="question-group" data-score="1">
+            <strong>13. 睡眠/食欲变化：您的睡眠或食欲是否有显著变化（如失眠/嗜睡，食欲不振/暴食）？</strong>
+            <label><input type="radio" name="q13" value="1" required> 是</label>
+            <label><input type="radio" name="q13" value="0"> 否</label>
+        </div>
+
+        <button type="submit" class="submit-btn">查看我的评估结果</button>
+    </form>
+
+    <div id="results" class="section-box">
+        <p style="font-size: 0.9em; color: var(--text-color);">本测试共包含13道问题，涵盖情绪、行为和睡眠等多个方面。请根据您在过去一个月的真实感受诚实作答。</p>
+        
+        <div class="result-level" id="result-level"></div>
+        <div class="result-score" id="score-display">0 分</div>
+        
+        <p id="result-text" style="margin-top: 15px; font-size: 0.95em;"></p>
+
+        <div class="professional-advice">
+            <p style="font-weight: bold; margin-bottom: 10px;">💡 专业建议</p>
+            <ul>
+                <li>建议咨询专业心理咨询师或精神科医生，进行更全面、精确的评估和诊断。</li>
+                <li>记录情绪日记，观察情绪波动发生的模式、频率和诱因。</li>
+                <li>学习压力管理技巧，积极减少不必要的压力来源。</li>
+                <li>保证充足睡眠，避免熬夜，保持规律作息。</li>
+                <li>限制咖啡因和酒精摄入。</li>
+            </ul>
+        </div>
+        
+        <button type="button" class="submit-btn" onclick="location.reload()">重新测试</button>
+    </div>
+
+</div>
+
+<script>
+    document.getElementById('quizForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // 检查所有问题是否都已回答
+        const questions = document.querySelectorAll('.question-group');
+        let allAnswered = true;
+        questions.forEach((q, index) => {
+            const name = 'q' + (index + 1);
+            if (!document.querySelector(`input[name="${name}"]:checked`)) {
+                allAnswered = false;
+            }
+        });
+
+        if (!allAnswered) {
+            alert('请回答所有 13 个问题再提交！');
+            return;
+        }
+
+        let score = 0;
+        
+        // 计算得分：所有选择“是”的问题都计1分
+        for (let i = 1; i <= 13; i++) {
+            const selected = document.querySelector(`input[name="q${i}"]:checked`);
+            if (selected && selected.value === '1') {
+                score++;
+            }
+        }
+
+        // 根据得分给出评估结果
+        let level = '';
+        let text = '';
+        let levelColor = '';
+
+        if (score >= 0 && score <= 3) {
+            level = '低风险';
+            levelColor = '#A2CC8A'; // 绿色
+            text = '您的情绪状态目前较为稳定，但仍建议关注心理健康，保持积极健康的生活方式。';
+        } else if (score >= 4 && score <= 7) {
+            level = '中等风险';
+            levelColor = '#FFA07A'; // 鲑鱼色/浅橙色
+            text = '您表现出一些需要关注的症状。虽然不一定意味着患有双相情感障碍，但建议您开始关注自己的情绪变化，并记录情绪日记。';
+        } else if (score >= 8 && score <= 13) {
+            level = '高风险';
+            levelColor = '#FF6347'; // 番茄红/红色
+            text = '您的得分较高，症状数量较多，建议您立即咨询专业精神科医生或心理咨询师，进行全面的评估和专业的诊断。请不要自行判断。';
+        }
+
+        // 更新结果显示
+        document.getElementById('score-display').textContent = `${score} 分`;
+        document.getElementById('result-level').textContent = level;
+        document.getElementById('result-level').style.backgroundColor = levelColor;
+        document.getElementById('result-text').textContent = text;
+        
+        // 隐藏问卷，显示结果
+        document.getElementById('quizForm').style.display = 'none';
+        document.getElementById('results').style.display = 'block';
+
+        window.scrollTo(0, 0); // 滚动到页面顶部查看结果
+    });
+</script>
+
+</body>
+</html>
